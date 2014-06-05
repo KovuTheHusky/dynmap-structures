@@ -1,0 +1,14 @@
+structures:
+  fortress: true
+  mineshaft: false
+  stronghold: true
+  temple: true
+  witch: true
+  village: true
+layer:
+  name: "Structures"
+  hidebydefault: false
+  layerprio: 10
+  nolabels: false
+  minzoom: 0
+  inc-coord: false
