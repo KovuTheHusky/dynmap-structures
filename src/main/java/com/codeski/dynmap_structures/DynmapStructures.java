@@ -52,8 +52,7 @@ public class DynmapStructures extends JavaPlugin implements Listener
 					try {
 						NBTReader r = new NBTReader(f);
 						NBTCompound root = r.read();
-						NBTCompound data = (NBTCompound) root.getPayload()[0];
-						NBTCompound features = (NBTCompound) data.getPayload()[0];
+						NBTCompound features = (NBTCompound) ((NBTCompound) root.get("data")).get("Features");
 						for (NBT temp : features.getPayload()) {
 							NBTCompound entries = (NBTCompound) temp;
 							String id = "";
@@ -68,12 +67,10 @@ public class DynmapStructures extends JavaPlugin implements Listener
 									id = ((NBTString) entry).getPayload();
 								else if (f.getName().equals("Temple.dat") && entry.getName().equals("Children")) {
 									NBT[] children = ((NBTList) entry).getPayload();
-									if (children.length > 0 && children[0] instanceof NBTCompound) {
-										children = ((NBTCompound) children[0]).getPayload();
-										for (NBT child : children)
+									if (children.length > 0 && children[0] instanceof NBTCompound)
+										for (NBT child : ((NBTCompound) children[0]).getPayload())
 											if (child.getName().equals("Witch"))
 												isWitch = ((NBTByte) child).getPayload() > 0;
-									}
 								}
 							if (x != Integer.MIN_VALUE && z != Integer.MIN_VALUE && id != "")
 								if (id.equals("Fortress"))
