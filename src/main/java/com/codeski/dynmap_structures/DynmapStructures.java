@@ -3,6 +3,7 @@ package com.codeski.dynmap_structures;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -66,9 +67,9 @@ public class DynmapStructures extends JavaPlugin implements Listener
 								else if (entry.getName().equals("id"))
 									id = ((NBTString) entry).getPayload();
 								else if (f.getName().equals("Temple.dat") && entry.getName().equals("Children")) {
-									NBT[] children = ((NBTList) entry).getPayload();
-									if (children.length > 0 && children[0] instanceof NBTCompound)
-										for (NBT child : ((NBTCompound) children[0]).getPayload())
+									List<NBT> children = ((NBTList) entry).getPayload();
+									if (children.size() > 0 && children.get(0) instanceof NBTCompound)
+										for (NBT child : ((NBTCompound) children.get(0)).getPayload())
 											if (child.getName().equals("Witch"))
 												isWitch = ((NBTByte) child).getPayload() > 0;
 								}
