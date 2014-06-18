@@ -52,7 +52,7 @@ public class DynmapStructures extends JavaPlugin implements Listener
 				if (!f.getName().equals("villages.dat"))
 					try {
 						NBTReader r = new NBTReader(f);
-						NBTCompound root = r.read();
+						NBTCompound root = r.readNBT();
 						NBTCompound features = (NBTCompound) ((NBTCompound) root.get("data")).get("Features");
 						for (NBT temp : features.getPayload()) {
 							NBTCompound entries = (NBTCompound) temp;
