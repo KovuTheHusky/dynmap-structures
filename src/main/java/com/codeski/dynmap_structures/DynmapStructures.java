@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
@@ -23,6 +24,8 @@ import com.codeski.nbt.tags.NBTString;
 
 public class DynmapStructures extends JavaPlugin implements Listener
 {
+	private FileConfiguration configuration;
+
 	@Override
 	public void onDisable() {
 		//
@@ -30,10 +33,18 @@ public class DynmapStructures extends JavaPlugin implements Listener
 
 	@Override
 	public void onEnable() {
+		this.saveDefaultConfig();
+		configuration = this.getConfig();
+		configuration.options().copyDefaults(true);
+		this.saveConfig();
 		if (Bukkit.getPluginManager().isPluginEnabled("dynmap")) {
 			DynmapCommonAPI api = (DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap");
 			MarkerAPI markerapi = api.getMarkerAPI();
-			MarkerSet set = markerapi.createMarkerSet("structures", "Structures", null, false);
+			MarkerSet set = markerapi.createMarkerSet(configuration.getString("layer.name").toLowerCase(), configuration.getString("layer.name"), null, false);
+			set.setHideByDefault(configuration.getBoolean("layer.hidebydefault"));
+			set.setLayerPriority(configuration.getInt("layer.layerprio"));
+			set.setLabelShow(!configuration.getBoolean("layer.nolabels"));
+			set.setMinZoom(configuration.getInt("layer.minzoom"));
 			InputStream in = this.getClass().getResourceAsStream("/fortress.png");
 			markerapi.createMarkerIcon("structures.fortress", "Fortress", in);
 			in = this.getClass().getResourceAsStream("/mineshaft.png");
@@ -74,11 +85,11 @@ public class DynmapStructures extends JavaPlugin implements Listener
 												isWitch = ((NBTByte) child).getPayload() > 0;
 								}
 							if (x != Integer.MIN_VALUE && z != Integer.MIN_VALUE && id != "")
-								if (id.equals("Fortress"))
+								if (id.equals("Fortress") && configuration.getBoolean("structures.fortress"))
 									set.createMarker(id + "," + x + "," + z, id, "world_nether", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
-								else if (isWitch)
+								else if (isWitch && configuration.getBoolean("structures.witch"))
 									set.createMarker(id + "," + x + "," + z, "Witch Hut", "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures.witch"), false);
-								else
+								else if (configuration.getBoolean("structures." + id.toLowerCase()))
 									set.createMarker(id + "," + x + "," + z, id, "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
 						}
 					} catch (IOException e) {

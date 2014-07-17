@@ -11,4 +11,4 @@ layer:
   layerprio: 10
   nolabels: false
   minzoom: 0
-  inc-coord: false
+  #inc-coord: false
