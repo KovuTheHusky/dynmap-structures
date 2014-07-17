@@ -65,33 +65,34 @@ public class DynmapStructures extends JavaPlugin implements Listener
 						NBTReader r = new NBTReader(f);
 						NBTCompound root = r.readNBT();
 						NBTCompound features = (NBTCompound) ((NBTCompound) root.get("data")).get("Features");
-						for (NBT temp : features.getPayload()) {
-							NBTCompound entries = (NBTCompound) temp;
-							String id = "";
-							int x = Integer.MIN_VALUE, z = Integer.MIN_VALUE;
-							boolean isWitch = false;
-							for (NBT entry : entries.getPayload())
-								if (entry.getName().equals("ChunkX"))
-									x = ((NBTInteger) entry).getPayload();
-								else if (entry.getName().equals("ChunkZ"))
-									z = ((NBTInteger) entry).getPayload();
-								else if (entry.getName().equals("id"))
-									id = ((NBTString) entry).getPayload();
-								else if (f.getName().equals("Temple.dat") && entry.getName().equals("Children")) {
-									List<NBT> children = ((NBTList) entry).getPayload();
-									if (children.size() > 0 && children.get(0) instanceof NBTCompound)
-										for (NBT child : ((NBTCompound) children.get(0)).getPayload())
-											if (child.getName().equals("Witch"))
-												isWitch = ((NBTByte) child).getPayload() > 0;
-								}
-							if (x != Integer.MIN_VALUE && z != Integer.MIN_VALUE && id != "")
-								if (id.equals("Fortress") && configuration.getBoolean("structures.fortress"))
-									set.createMarker(id + "," + x + "," + z, id, "world_nether", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
-								else if (isWitch && configuration.getBoolean("structures.witch"))
-									set.createMarker(id + "," + x + "," + z, "Witch Hut", "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures.witch"), false);
-								else if (configuration.getBoolean("structures." + id.toLowerCase()))
-									set.createMarker(id + "," + x + "," + z, id, "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
-						}
+						if (features != null && features.getPayload() != null)
+							for (NBT temp : features.getPayload()) {
+								NBTCompound entries = (NBTCompound) temp;
+								String id = "";
+								int x = Integer.MIN_VALUE, z = Integer.MIN_VALUE;
+								boolean isWitch = false;
+								for (NBT entry : entries.getPayload())
+									if (entry.getName().equals("ChunkX"))
+										x = ((NBTInteger) entry).getPayload();
+									else if (entry.getName().equals("ChunkZ"))
+										z = ((NBTInteger) entry).getPayload();
+									else if (entry.getName().equals("id"))
+										id = ((NBTString) entry).getPayload();
+									else if (f.getName().equals("Temple.dat") && entry.getName().equals("Children")) {
+										List<NBT> children = ((NBTList) entry).getPayload();
+										if (children.size() > 0 && children.get(0) instanceof NBTCompound)
+											for (NBT child : ((NBTCompound) children.get(0)).getPayload())
+												if (child.getName().equals("Witch"))
+													isWitch = ((NBTByte) child).getPayload() > 0;
+									}
+								if (x != Integer.MIN_VALUE && z != Integer.MIN_VALUE && id != "")
+									if (id.equals("Fortress") && configuration.getBoolean("structures.fortress"))
+										set.createMarker(id + "," + x + "," + z, id, "world_nether", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
+									else if (isWitch && configuration.getBoolean("structures.witch"))
+										set.createMarker(id + "," + x + "," + z, "Witch Hut", "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures.witch"), false);
+									else if (configuration.getBoolean("structures." + id.toLowerCase()))
+										set.createMarker(id + "," + x + "," + z, id, "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
+							}
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
