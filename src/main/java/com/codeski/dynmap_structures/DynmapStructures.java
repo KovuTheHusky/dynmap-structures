@@ -43,7 +43,7 @@ public class DynmapStructures extends JavaPlugin implements Listener
 			MarkerSet set = markerapi.createMarkerSet(configuration.getString("layer.name").toLowerCase(), configuration.getString("layer.name"), null, false);
 			set.setHideByDefault(configuration.getBoolean("layer.hidebydefault"));
 			set.setLayerPriority(configuration.getInt("layer.layerprio"));
-			set.setLabelShow(!configuration.getBoolean("layer.nolabels"));
+			// set.setLabelShow(!configuration.getBoolean("layer.nolabels"));
 			set.setMinZoom(configuration.getInt("layer.minzoom"));
 			InputStream in = this.getClass().getResourceAsStream("/fortress.png");
 			markerapi.createMarkerIcon("structures.fortress", "Fortress", in);
@@ -87,11 +87,11 @@ public class DynmapStructures extends JavaPlugin implements Listener
 									}
 								if (x != Integer.MIN_VALUE && z != Integer.MIN_VALUE && id != "")
 									if (id.equals("Fortress") && configuration.getBoolean("structures.fortress"))
-										set.createMarker(id + "," + x + "," + z, id, "world_nether", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
+										set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, "world_nether", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
 									else if (isWitch && configuration.getBoolean("structures.witch"))
-										set.createMarker(id + "," + x + "," + z, "Witch Hut", "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures.witch"), false);
+										set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : "Witch Hut", "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures.witch"), false);
 									else if (configuration.getBoolean("structures." + id.toLowerCase()))
-										set.createMarker(id + "," + x + "," + z, id, "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
+										set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
 							}
 					} catch (IOException e) {
 						e.printStackTrace();
