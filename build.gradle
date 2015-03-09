@@ -1,0 +1,47 @@
+import org.apache.tools.ant.filters.*
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'com.github.johnrengelman.shadow'
+
+group = 'com.codeski'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+buildscript {
+  repositories { jcenter() }
+  dependencies {
+    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.0'
+  }
+}
+
+processResources {
+  filter ReplaceTokens, tokens: [
+    "version": project.property("version")
+  ]
+}
+
+repositories {
+  maven {
+    url = 'http://repo.bukkit.org/content/groups/public/'
+  }
+  maven {
+    url = 'http://repo.mikeprimm.com/'
+  }
+  maven {
+    url = 'http://codeski.com/repository/'
+  }
+}
+
+dependencies {
+  compile 'org.bukkit:bukkit:1.7.2-R0.3'
+  compile 'org.dynmap:DynmapCoreAPI:1.9.4'
+  compile 'com.codeski:NBT:0.0.1-SNAPSHOT'
+}
+
+shadowJar {
+  dependencies {
+    include(dependency('com.codeski:NBT'))
+  }
+}
