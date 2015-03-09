@@ -3,6 +3,7 @@ package com.codeski.dynmap_structures;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -25,6 +26,7 @@ import com.codeski.nbt.tags.NBTString;
 public class DynmapStructures extends JavaPlugin implements Listener
 {
 	private FileConfiguration configuration;
+	private final String[] files = { "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
 
 	@Override
 	public void onDisable() {
@@ -62,7 +64,7 @@ public class DynmapStructures extends JavaPlugin implements Listener
 			World world = Bukkit.getWorld("world");
 			File dataFolder = new File(world.getWorldFolder(), "data");
 			for (File f : dataFolder.listFiles())
-				if (!f.getName().equals("villages.dat"))
+				if (Arrays.asList(files).contains(f.getName()))
 					try {
 						NBTReader r = new NBTReader(f);
 						NBTCompound root = r.readNBT();
