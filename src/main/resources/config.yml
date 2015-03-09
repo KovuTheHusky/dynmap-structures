@@ -1,6 +1,7 @@
 structures:
   fortress: true
   mineshaft: false
+  monument: true
   stronghold: true
   temple: true
   witch: true

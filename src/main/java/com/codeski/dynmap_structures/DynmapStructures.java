@@ -49,6 +49,8 @@ public class DynmapStructures extends JavaPlugin implements Listener
 			markerapi.createMarkerIcon("structures.fortress", "Fortress", in);
 			in = this.getClass().getResourceAsStream("/mineshaft.png");
 			markerapi.createMarkerIcon("structures.mineshaft", "Mineshaft", in);
+			in = this.getClass().getResourceAsStream("/monument.png");
+			markerapi.createMarkerIcon("structures.monument", "Monument", in);
 			in = this.getClass().getResourceAsStream("/stronghold.png");
 			markerapi.createMarkerIcon("structures.stronghold", "Stronghold", in);
 			in = this.getClass().getResourceAsStream("/temple.png");
