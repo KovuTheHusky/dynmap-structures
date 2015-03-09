@@ -1,4 +1,4 @@
-package com.codeski.dynmap_structures;
+package com.codeski.dynmap.structures;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +23,7 @@ import com.codeski.nbt.tags.NBTInteger;
 import com.codeski.nbt.tags.NBTList;
 import com.codeski.nbt.tags.NBTString;
 
-public class DynmapStructures extends JavaPlugin implements Listener
+public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 {
 	private FileConfiguration configuration;
 	private final String[] files = { "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
@@ -75,6 +75,7 @@ public class DynmapStructures extends JavaPlugin implements Listener
 								String id = "";
 								int x = Integer.MIN_VALUE, z = Integer.MIN_VALUE;
 								boolean isWitch = false;
+								boolean isValid = true;
 								for (NBT entry : entries.getPayload())
 									if (entry.getName().equals("ChunkX"))
 										x = ((NBTInteger) entry).getPayload();
@@ -82,6 +83,8 @@ public class DynmapStructures extends JavaPlugin implements Listener
 										z = ((NBTInteger) entry).getPayload();
 									else if (entry.getName().equals("id"))
 										id = ((NBTString) entry).getPayload();
+									else if (f.getName().equals("Village.dat") && entry.getName().equals("Valid"))
+										isValid = ((NBTByte) entry).getPayload() > 0;
 									else if (f.getName().equals("Temple.dat") && entry.getName().equals("Children")) {
 										List<NBT> children = ((NBTList) entry).getPayload();
 										if (children.size() > 0 && children.get(0) instanceof NBTCompound)
@@ -92,6 +95,10 @@ public class DynmapStructures extends JavaPlugin implements Listener
 								if (x != Integer.MIN_VALUE && z != Integer.MIN_VALUE && id != "")
 									if (id.equals("Fortress") && configuration.getBoolean("structures.fortress"))
 										set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, "world_nether", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
+									else if (isValid && id.equals("Village") && configuration.getBoolean("structures.village"))
+										set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures." + id.toLowerCase()), false);
+									else if (!isValid && id.equals("Village") && configuration.getBoolean("structures.village"))
+										Bukkit.getLogger().info("Invalid village @ " + x * 16 + "," + z * 16);
 									else if (isWitch && configuration.getBoolean("structures.witch"))
 										set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : "Witch Hut", "world", x * 16, 64, z * 16, markerapi.getMarkerIcon("structures.witch"), false);
 									else if (configuration.getBoolean("structures." + id.toLowerCase()))
