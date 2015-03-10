@@ -46,7 +46,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 			// set.setLabelShow(!configuration.getBoolean("layer.nolabels"));
 			set.setMinZoom(configuration.getInt("layer.minzoom"));
 			for (String str : img) {
-				InputStream in = this.getClass().getResourceAsStream("/" + str + ".png");
+				InputStream in = this.getClass().getResourceAsStream("/" + str.toLowerCase() + ".png");
 				api.createMarkerIcon("structures." + str.toLowerCase(), str, in);
 			}
 			for (String str : dat)
