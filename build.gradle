@@ -17,9 +17,11 @@ buildscript {
 }
 
 processResources {
-  filter ReplaceTokens, tokens: [
-    "version": project.property("version")
-  ]
+  filesNotMatching("**/*.png") {
+    filter ReplaceTokens, tokens: [
+      "version": project.property("version")
+    ]
+  }
 }
 
 repositories {
