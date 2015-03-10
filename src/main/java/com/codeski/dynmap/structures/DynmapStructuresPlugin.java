@@ -72,6 +72,9 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 										if (child.getName().equals("Witch"))
 											isWitch = ((NBTByte) child).getPayload() > 0;
 							}
+							if (str.equalsIgnoreCase("Monument.dat"))
+								if (structure.<NBTList> get("Processed").getPayload().size() == 0)
+									continue;
 							if (id.equals("Fortress") && configuration.getBoolean("structures.fortress"))
 								set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, "world_nether", x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase()), false);
 							else if (isWitch && configuration.getBoolean("structures.witch"))
