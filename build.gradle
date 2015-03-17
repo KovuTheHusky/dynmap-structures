@@ -39,7 +39,7 @@ repositories {
 dependencies {
   compile 'org.bukkit:bukkit:1.7.2-R0.3'
   compile 'org.dynmap:DynmapCoreAPI:1.9.4'
-  compile 'com.codeski:NBT:0.0.1-SNAPSHOT'
+  compile 'com.codeski:NBT:0.0.1'
 }
 
 shadowJar {
