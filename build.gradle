@@ -47,3 +47,5 @@ shadowJar {
     include(dependency('com.codeski:NBT'))
   }
 }
+
+build.finalizedBy(shadowJar);
