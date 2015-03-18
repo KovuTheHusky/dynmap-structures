@@ -11,6 +11,7 @@ import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,16 +32,16 @@ import com.google.common.base.Joiner;
 
 public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 {
+	private MarkerAPI api;
 	private FileConfiguration configuration;
-	private final String[] dat = { "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
-	private final String[] img = { "Fortress", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
-	MarkerAPI api;
-	File data;
-	MarkerSet set;
+	private File directory;
+	private final String[] files = { "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
+	private final String[] images = { "Fortress", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
+	private Logger logger;
+	private MarkerSet set;
 
 	@Override
 	public void onDisable() {
-		//
 	}
 
 	@Override
@@ -49,6 +50,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 		configuration = this.getConfig();
 		configuration.options().copyDefaults(true);
 		this.saveConfig();
+		logger = this.getLogger();
 		if (Bukkit.getPluginManager().isPluginEnabled("dynmap")) {
 			api = ((DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap")).getMarkerAPI();
 			set = api.createMarkerSet(configuration.getString("layer.name").toLowerCase(), configuration.getString("layer.name"), null, false);
@@ -56,7 +58,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 			set.setLayerPriority(configuration.getInt("layer.layerprio"));
 			// set.setLabelShow(!configuration.getBoolean("layer.nolabels"));
 			set.setMinZoom(configuration.getInt("layer.minzoom"));
-			for (String str : img) {
+			for (String str : images) {
 				InputStream in = this.getClass().getResourceAsStream("/" + str.toLowerCase() + ".png");
 				if (in != null)
 					if (api.getMarkerIcon("structures." + str.toLowerCase()) == null)
@@ -64,13 +66,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 					else
 						api.getMarkerIcon("structures." + str.toLowerCase()).setMarkerIconImage(in);
 			}
-			data = new File(Bukkit.getWorld("world").getWorldFolder(), "data/");
-			Bukkit.getLogger().info("Updating: " + Joiner.on(", ").join(dat));
-			this.update(dat);
+			directory = new File(Bukkit.getWorld("world").getWorldFolder(), "data/");
+			logger.info("Updating: " + Joiner.on(", ").join(files));
+			this.update(files);
 			Runnable r = new Runnable() {
 				@Override
 				public void run() {
-					Path dir = Paths.get(data.toURI());
+					Path dir = Paths.get(directory.toURI());
 					try {
 						WatchService watcher = dir.getFileSystem().newWatchService();
 						dir.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
@@ -82,12 +84,12 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 							List<String> filesChanged = new ArrayList<String>();
 							for (WatchEvent event : events)
 								if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE || event.kind() == StandardWatchEventKinds.ENTRY_MODIFY)
-									for (String str : dat)
+									for (String str : files)
 										if (str.equalsIgnoreCase(event.context().toString()))
 											filesChanged.add(str);
 							if (filesChanged.size() == 0)
 								continue;
-							Bukkit.getLogger().info("Updating: " + Joiner.on(", ").join(filesChanged));
+							logger.info("Updating: " + Joiner.on(", ").join(filesChanged));
 							DynmapStructuresPlugin.this.update(filesChanged.toArray(new String[filesChanged.size()]));
 						}
 					} catch (Exception e) {
@@ -102,7 +104,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 	private void update(String[] dat) {
 		for (String str : dat)
 			try {
-				File file = new File(data, str);
+				File file = new File(directory, str);
 				if (!file.exists())
 					continue;
 				NBTCompound structures = NBTReader.read(file).<NBTCompound> get("data").<NBTCompound> get("Features");
