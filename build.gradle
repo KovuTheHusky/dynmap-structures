@@ -48,4 +48,4 @@ shadowJar {
   }
 }
 
-build.finalizedBy(shadowJar);
+jar.finalizedBy(shadowJar);
