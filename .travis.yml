@@ -1,9 +1,10 @@
 language: java
 deploy:
   provider: releases
-  api-key: "8638657fcd2e4e9d3ad9e4173733d41b8e74d1c5"
+  api_key:
+    secure: "TNJvlQATVHiGIDYGuMpWJLl0/CSskfWJQGWp8YNlC1bAiUfalAU2a/d+85uRVaa09qSPeXBQkyxC6e/pzvPOMCgA9Uv+c9f4JyajHCq6qppuYaET4N6+1W0d/1EHJFPq3g1ElGkIZYqN8sPjm4JU+FK/48yI8KAev/r2wsVmo0A="
   file-glob: true
-  file: "build/libs/dynmap-structures-*.jar"
+  file: "build/libs/dynmap-structures-*-all.jar"
   skip_cleanup: true
   on:
     tags: true
