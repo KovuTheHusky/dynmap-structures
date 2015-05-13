@@ -1,3 +1,4 @@
 name: dynmap-structures
 main: com.codeski.dynmap.structures.DynmapStructuresPlugin
 version: @version@
+depend: [dynmap]
