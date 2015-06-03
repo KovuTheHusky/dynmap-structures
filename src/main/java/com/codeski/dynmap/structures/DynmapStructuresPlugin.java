@@ -12,6 +12,7 @@ import java.nio.file.WatchService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
@@ -44,7 +45,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 		private final World world;
 
 		public DynmapStructuresRunnable(World world) {
-			super();
 			this.world = world;
 			directory = new File(this.world.getWorldFolder(), "data/");
 		}
@@ -53,8 +53,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 		public void run() {
 			logger.info("Adding thread for world '" + world.getName() + "'.");
 			Path path = Paths.get(directory.toURI());
-			try {
-				WatchService watcher = path.getFileSystem().newWatchService();
+			try (WatchService watcher = path.getFileSystem().newWatchService()) {
 				path.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
 				WatchKey key = watcher.take();
 				for (; !stop;) {
@@ -62,17 +61,18 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 					if (events.size() == 0)
 						continue;
 					List<String> changed = new ArrayList<String>();
-					for (WatchEvent event : events)
-						if (event.kind() == StandardWatchEventKinds.ENTRY_CREATE || event.kind() == StandardWatchEventKinds.ENTRY_MODIFY)
-							for (String str : files)
-								if (str.equalsIgnoreCase(event.context().toString()))
-									changed.add(str);
+					for (WatchEvent<?> event : events) {
+						String eventFile = event.context().toString();
+						for (String str : files)
+							if (str.equalsIgnoreCase(eventFile) && !changed.contains(str))
+								changed.add(str);
+					}
 					if (changed.size() == 0)
 						continue;
 					this.update(changed.toArray(new String[changed.size()]));
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.printStackTrace(System.err);
 			}
 			logger.info("Removing thread for world '" + world.getName() + "'.");
 		}
@@ -91,7 +91,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 						continue;
 					NBTCompound structures = NBTReader.read(file).<NBTCompound> get("data").<NBTCompound> get("Features");
 					if (structures != null && structures.getPayload() != null)
-						for (NBT temp : structures.getPayload()) {
+						for (NBT<?> temp : structures.getPayload()) {
 							NBTCompound structure = (NBTCompound) temp;
 							String id = structure.<NBTString> get("id").getPayload();
 							int x = structure.<NBTInteger> get("ChunkX").getPayload();
@@ -101,9 +101,9 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 								continue;
 							boolean isWitch = false;
 							if (str.equals("Temple.dat")) {
-								List<NBT> children = structure.<NBTList> get("Children").getPayload();
+								List<NBT<?>> children = structure.<NBTList> get("Children").getPayload();
 								if (children.size() > 0 && children.get(0) instanceof NBTCompound)
-									for (NBT child : ((NBTCompound) children.get(0)).getPayload())
+									for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload())
 										if (child.getName().equals("Witch"))
 											isWitch = ((NBTByte) child).getPayload() > 0;
 							}
@@ -117,14 +117,14 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 								else if (Bukkit.getWorld(world.getName() + "_nether") != null)
 									fortressWorld = world.getName() + "_nether";
 								if (fortressWorld != null)
-									set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, fortressWorld, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase()), false);
+									set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, fortressWorld, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
 							} else if (isWitch && configuration.getBoolean("structures.witch"))
 								set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : "Witch Hut", world.getName(), x * 16, 64, z * 16, api.getMarkerIcon("structures.witch"), false);
-							else if (configuration.getBoolean("structures." + id.toLowerCase()))
-								set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, world.getName(), x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase()), false);
+							else if (configuration.getBoolean("structures." + id.toLowerCase(Locale.ROOT)))
+								set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, world.getName(), x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
 						}
 				} catch (IOException e) {
-					e.printStackTrace();
+					e.printStackTrace(System.err);
 				}
 		}
 	}
@@ -157,61 +157,29 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 		if (Bukkit.getPluginManager().isPluginEnabled("dynmap")) {
 			// Set up our Dynmap layer
 			api = ((DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap")).getMarkerAPI();
-			set = api.createMarkerSet(configuration.getString("layer.name").toLowerCase(), configuration.getString("layer.name"), null, false);
+			set = api.createMarkerSet(configuration.getString("layer.name").toLowerCase(Locale.ROOT), configuration.getString("layer.name"), null, false);
 			set.setHideByDefault(configuration.getBoolean("layer.hidebydefault"));
 			set.setLayerPriority(configuration.getInt("layer.layerprio"));
 			// set.setLabelShow(!configuration.getBoolean("layer.nolabels"));
 			set.setMinZoom(configuration.getInt("layer.minzoom"));
 			// Create the marker icons
 			for (String str : images) {
-				InputStream in = this.getClass().getResourceAsStream("/" + str.toLowerCase() + ".png");
+				InputStream in = this.getClass().getResourceAsStream("/" + str.toLowerCase(Locale.ROOT) + ".png");
 				if (in != null)
-					if (api.getMarkerIcon("structures." + str.toLowerCase()) == null)
-						api.createMarkerIcon("structures." + str.toLowerCase(), str, in);
+					if (api.getMarkerIcon("structures." + str.toLowerCase(Locale.ROOT)) == null)
+						api.createMarkerIcon("structures." + str.toLowerCase(Locale.ROOT), str, in);
 					else
-						api.getMarkerIcon("structures." + str.toLowerCase()).setMarkerIconImage(in);
+						api.getMarkerIcon("structures." + str.toLowerCase(Locale.ROOT)).setMarkerIconImage(in);
 			}
 			// Parse the worlds that have already been loaded
 			for (World w : Bukkit.getWorlds())
-				switch (w.getEnvironment()) {
-					case NORMAL:
-					case NETHER:
-						if (w.canGenerateStructures()) {
-							// Update markers for this world
-							DynmapStructuresRunnable r = new DynmapStructuresRunnable(w);
-							r.update(files);
-							// Add a thread to watch this world for changes
-							Thread t = new Thread(r);
-							t.setPriority(Thread.MIN_PRIORITY);
-							t.start();
-							runnables.put(w, r);
-							threads.put(w, t);
-						}
-						break;
-					default:
-				}
+				this.checkWorld(w);
 		}
 	}
 
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
-		switch (event.getWorld().getEnvironment()) {
-			case NORMAL:
-			case NETHER:
-				if (event.getWorld().canGenerateStructures()) {
-					// Update markers for this world
-					DynmapStructuresRunnable r = new DynmapStructuresRunnable(event.getWorld());
-					r.update(files);
-					// Add a thread to watch this world for changes
-					Thread t = new Thread(r);
-					t.setPriority(Thread.MIN_PRIORITY);
-					t.start();
-					runnables.put(event.getWorld(), r);
-					threads.put(event.getWorld(), t);
-				}
-				break;
-			default:
-		}
+		this.checkWorld(event.getWorld());
 	}
 
 	@EventHandler
@@ -219,5 +187,25 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 		runnables.get(event.getWorld()).stop();
 		runnables.remove(event.getWorld());
 		threads.remove(event.getWorld());
+	}
+
+	private void checkWorld(World world) {
+		switch (world.getEnvironment()) {
+			case NORMAL:
+			case NETHER:
+				if (world.canGenerateStructures()) {
+					// Update markers for this world
+					DynmapStructuresRunnable r = new DynmapStructuresRunnable(world);
+					r.update(files);
+					// Add a thread to watch this world for changes
+					Thread t = new Thread(r);
+					t.setPriority(Thread.MIN_PRIORITY);
+					t.start();
+					runnables.put(world, r);
+					threads.put(world, t);
+				}
+				break;
+			default:
+		}
 	}
 }
