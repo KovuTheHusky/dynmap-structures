@@ -90,39 +90,38 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 					if (!file.exists())
 						continue;
 					NBTCompound structures = NBTReader.read(file).<NBTCompound> get("data").<NBTCompound> get("Features");
-					if (structures != null && structures.getPayload() != null)
-						for (NBT<?> temp : structures.getPayload()) {
-							NBTCompound structure = (NBTCompound) temp;
-							String id = structure.<NBTString> get("id").getPayload();
-							int x = structure.<NBTInteger> get("ChunkX").getPayload();
-							int z = structure.<NBTInteger> get("ChunkZ").getPayload();
-							boolean isVillage = structure.<NBTByte> get("Valid") != null && structure.<NBTByte> get("Valid").getPayload() > 0;
-							if (str.equalsIgnoreCase("Village.dat") && !isVillage)
+					if (structures == null && structures.getPayload() == null)
+						continue;
+					for (NBT<?> temp : structures.getPayload()) {
+						NBTCompound structure = (NBTCompound) temp;
+						String id = structure.<NBTString> get("id").getPayload();
+						String wn = world.getName();
+						int x = structure.<NBTInteger> get("ChunkX").getPayload();
+						int z = structure.<NBTInteger> get("ChunkZ").getPayload();
+						if (str.equalsIgnoreCase("Village.dat")) {
+							// Make sure this Village is actually in the world
+							if (structure.<NBTByte> get("Valid") == null || structure.<NBTByte> get("Valid").getPayload() == 0)
 								continue;
-							boolean isWitch = false;
-							if (str.equals("Temple.dat")) {
-								List<NBT<?>> children = structure.<NBTList> get("Children").getPayload();
-								if (children.size() > 0 && children.get(0) instanceof NBTCompound)
-									for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload())
-										if (child.getName().equals("Witch"))
-											isWitch = ((NBTByte) child).getPayload() > 0;
-							}
-							if (str.equalsIgnoreCase("Monument.dat"))
-								if (structure.<NBTList> get("Processed").getPayload().size() == 0)
-									continue;
-							if (id.equals("Fortress") && configuration.getBoolean("structures.fortress")) {
-								String fortressWorld = null;
-								if (world.getEnvironment() == Environment.NETHER)
-									fortressWorld = world.getName();
-								else if (Bukkit.getWorld(world.getName() + "_nether") != null)
-									fortressWorld = world.getName() + "_nether";
-								if (fortressWorld != null)
-									set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, fortressWorld, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
-							} else if (isWitch && configuration.getBoolean("structures.witch"))
-								set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : "Witch Hut", world.getName(), x * 16, 64, z * 16, api.getMarkerIcon("structures.witch"), false);
-							else if (configuration.getBoolean("structures." + id.toLowerCase(Locale.ROOT)))
-								set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, world.getName(), x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
-						}
+						} else if (str.equals("Temple.dat")) {
+							// Check if this Temple is actually a Witch
+							List<NBT<?>> children = structure.<NBTList> get("Children").getPayload();
+							if (children.size() > 0 && children.get(0) instanceof NBTCompound)
+								for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload())
+									if (child.getName().equals("Witch"))
+										if (((NBTByte) child).getPayload() > 0)
+											id = "Witch";
+						} else if (str.equalsIgnoreCase("Monument.dat")) {
+							// Make sure this Monument is actually in the world
+							if (structure.<NBTList> get("Processed").getPayload().size() == 0)
+								continue;
+						} else if (str.equals("Fortress.dat"))
+							// If this world is not Nether try to get one that is
+							if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER)
+								wn = world.getName() + "_nether";
+							else
+								continue;
+						set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
+					}
 				} catch (IOException e) {
 					e.printStackTrace(System.err);
 				}
