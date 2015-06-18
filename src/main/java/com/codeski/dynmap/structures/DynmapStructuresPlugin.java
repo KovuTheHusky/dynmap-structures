@@ -63,7 +63,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 					List<String> changed = new ArrayList<String>();
 					for (WatchEvent<?> event : events) {
 						String eventFile = event.context().toString();
-						for (String str : files)
+						for (String str : enabled)
 							if (str.equalsIgnoreCase(eventFile) && !changed.contains(str))
 								changed.add(str);
 					}
@@ -131,6 +131,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 
 	private MarkerAPI api;
 	private FileConfiguration configuration;
+	private String[] enabled;
 	private final String[] files = { "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
 	private final String[] images = { "Fortress", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
 	private Logger logger;
@@ -171,6 +172,21 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 					else
 						api.getMarkerIcon("structures." + str.toLowerCase(Locale.ROOT)).setMarkerIconImage(in);
 			}
+			// Build an array of files to parse if changed
+			List<String> enabled = new ArrayList<String>();
+			if (configuration.getBoolean("structures.fortress"))
+				enabled.add("Fortress.dat");
+			if (configuration.getBoolean("structures.mineshaft"))
+				enabled.add("Mineshaft.dat");
+			if (configuration.getBoolean("structures.monument"))
+				enabled.add("Monument.dat");
+			if (configuration.getBoolean("structures.stronghold"))
+				enabled.add("Stronghold.dat");
+			if (configuration.getBoolean("structures.temple") || configuration.getBoolean("structures.witch"))
+				enabled.add("Temple.dat");
+			if (configuration.getBoolean("structures.village"))
+				enabled.add("Village.dat");
+			this.enabled = enabled.toArray(new String[enabled.size()]);
 			// Parse the worlds that have already been loaded
 			for (World w : Bukkit.getWorlds())
 				this.addWorld(w);
@@ -194,7 +210,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 				if (world.canGenerateStructures()) {
 					// Update markers for this world
 					DynmapStructuresRunnable r = new DynmapStructuresRunnable(world);
-					r.update(files);
+					r.update(enabled);
 					// Add a thread to watch this world for changes
 					Thread t = new Thread(r);
 					t.setPriority(Thread.MIN_PRIORITY);
