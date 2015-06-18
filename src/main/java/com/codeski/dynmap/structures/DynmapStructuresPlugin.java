@@ -173,23 +173,21 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 			}
 			// Parse the worlds that have already been loaded
 			for (World w : Bukkit.getWorlds())
-				this.checkWorld(w);
+				this.addWorld(w);
 		}
 	}
 
 	@EventHandler
 	public void onWorldLoad(WorldLoadEvent event) {
-		this.checkWorld(event.getWorld());
+		this.addWorld(event.getWorld());
 	}
 
 	@EventHandler
 	public void onWorldUnload(WorldUnloadEvent event) {
-		runnables.get(event.getWorld()).stop();
-		runnables.remove(event.getWorld());
-		threads.remove(event.getWorld());
+		this.removeWorld(event.getWorld());
 	}
 
-	private void checkWorld(World world) {
+	private void addWorld(World world) {
 		switch (world.getEnvironment()) {
 			case NORMAL:
 			case NETHER:
@@ -207,5 +205,11 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 				break;
 			default:
 		}
+	}
+
+	private void removeWorld(World world) {
+		runnables.get(world).stop();
+		runnables.remove(world);
+		threads.remove(world);
 	}
 }
