@@ -37,8 +37,7 @@ import com.codeski.nbt.tags.NBTList;
 import com.codeski.nbt.tags.NBTString;
 import com.google.common.base.Joiner;
 
-public class DynmapStructuresPlugin extends JavaPlugin implements Listener
-{
+public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 	private class DynmapStructuresRunnable implements Runnable {
 		private final File directory;
 		private boolean stop = false;
@@ -55,8 +54,8 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 			Path path = Paths.get(directory.toURI());
 			try (WatchService watcher = path.getFileSystem().newWatchService()) {
 				path.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
-				WatchKey key = watcher.take();
 				for (; !stop;) {
+					WatchKey key = watcher.take();
 					List<WatchEvent<?>> events = key.pollEvents();
 					if (events.size() == 0)
 						continue;
@@ -67,9 +66,12 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener
 							if (str.equalsIgnoreCase(eventFile) && !changed.contains(str))
 								changed.add(str);
 					}
-					if (changed.size() == 0)
-						continue;
-					this.update(changed.toArray(new String[changed.size()]));
+					if (changed.size() > 0)
+						this.update(changed.toArray(new String[changed.size()]));
+					if (!key.reset()) {
+						logger.warning("Something went wrong with the watch service and it must be stopped. Sorry!");
+						stop = true;
+					}
 				}
 			} catch (Exception e) {
 				e.printStackTrace(System.err);
