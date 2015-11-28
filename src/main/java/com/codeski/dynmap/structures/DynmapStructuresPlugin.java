@@ -122,7 +122,12 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 								wn = world.getName() + "_nether";
 							else
 								continue;
-						set.createMarker(id + "," + x + "," + z, configuration.getBoolean("layer.nolabels") ? "" : id, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
+						String label = id;
+						if (noLabels)
+							label = "";
+						else if (includeCoordinates)
+							label = id + " [" + x * 16 + "," + z * 16 + "]";
+						set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
 					}
 				} catch (IOException e) {
 					e.printStackTrace(System.err);
@@ -135,7 +140,9 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 	private String[] enabled;
 	private final String[] files = { "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
 	private final String[] images = { "Fortress", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
+	private boolean includeCoordinates;
 	private Logger logger;
+	private boolean noLabels;
 	private final HashMap<World, DynmapStructuresRunnable> runnables = new HashMap<World, DynmapStructuresRunnable>();
 	private MarkerSet set;
 	private final HashMap<World, Thread> threads = new HashMap<World, Thread>();
@@ -162,8 +169,11 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 			set = api.createMarkerSet(configuration.getString("layer.name").toLowerCase(Locale.ROOT), configuration.getString("layer.name"), null, false);
 			set.setHideByDefault(configuration.getBoolean("layer.hidebydefault"));
 			set.setLayerPriority(configuration.getInt("layer.layerprio"));
-			// set.setLabelShow(!configuration.getBoolean("layer.nolabels"));
-			set.setMinZoom(configuration.getInt("layer.minzoom"));
+			noLabels = configuration.getBoolean("layer.nolabels");
+			int minZoom = configuration.getInt("layer.minzoom");
+			if (minZoom > 0)
+				set.setMinZoom(minZoom);
+			includeCoordinates = configuration.getBoolean("layer.inc-coord");
 			// Create the marker icons
 			for (String str : images) {
 				InputStream in = this.getClass().getResourceAsStream("/" + str.toLowerCase(Locale.ROOT) + ".png");
