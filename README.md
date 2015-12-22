@@ -74,6 +74,7 @@ You can also place a hash in front of any of the nodes to comment it out and dis
 ## Links
 
 * Website: <http://codeski.com/#dynmapstructures>
+* Example: <http://codeski.com/examples/dynmap-structures>
 * Issues: <https://github.com/Codeski/dynmap-structures/issues>
 * Source: <https://github.com/Codeski/dynmap-structures>
 * Builds: <https://travis-ci.org/Codeski/dynmap-structures>
