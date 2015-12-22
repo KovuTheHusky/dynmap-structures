@@ -100,23 +100,26 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 						String wn = world.getName();
 						int x = structure.<NBTInteger> get("ChunkX").getPayload();
 						int z = structure.<NBTInteger> get("ChunkZ").getPayload();
-						if (str.equalsIgnoreCase("Village.dat")) {
+						if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
 							// Make sure this Village is actually in the world
 							if (structure.<NBTByte> get("Valid") == null || structure.<NBTByte> get("Valid").getPayload() == 0)
 								continue;
-						} else if (str.equals("Temple.dat")) {
+						} else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
+							// Check if this Temple is from Biomes O Plenty
+							if (id.equalsIgnoreCase("BOPTemple"))
+								id = "Temple";
 							// Check if this Temple is actually a Witch
 							List<NBT<?>> children = structure.<NBTList> get("Children").getPayload();
 							if (children.size() > 0 && children.get(0) instanceof NBTCompound)
 								for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload())
-									if (child.getName().equals("Witch"))
+									if (child.getName().equalsIgnoreCase("Witch"))
 										if (((NBTByte) child).getPayload() > 0)
 											id = "Witch";
 						} else if (str.equalsIgnoreCase("Monument.dat")) {
 							// Make sure this Monument is actually in the world
 							if (structure.<NBTList> get("Processed").getPayload().size() == 0)
 								continue;
-						} else if (str.equals("Fortress.dat"))
+						} else if (str.equalsIgnoreCase("Fortress.dat"))
 							// If this world is not Nether try to get one that is
 							if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER)
 								wn = world.getName() + "_nether";
@@ -138,7 +141,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 	private MarkerAPI api;
 	private FileConfiguration configuration;
 	private String[] enabled;
-	private final String[] files = { "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
+	private final String[] files = { "BOPTemple.dat", "BOPVillage.dat", "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
 	private final String[] images = { "Fortress", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
 	private boolean includeCoordinates;
 	private Logger logger;
@@ -193,10 +196,14 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 				enabled.add("Monument.dat");
 			if (configuration.getBoolean("structures.stronghold"))
 				enabled.add("Stronghold.dat");
-			if (configuration.getBoolean("structures.temple") || configuration.getBoolean("structures.witch"))
+			if (configuration.getBoolean("structures.temple") || configuration.getBoolean("structures.witch")) {
+				enabled.add("BOPTemple.dat");
 				enabled.add("Temple.dat");
-			if (configuration.getBoolean("structures.village"))
+			}
+			if (configuration.getBoolean("structures.village")) {
+				enabled.add("BOPVillage.dat");
 				enabled.add("Village.dat");
+			}
 			this.enabled = enabled.toArray(new String[enabled.size()]);
 			// Parse the worlds that have already been loaded
 			for (World w : Bukkit.getWorlds())
