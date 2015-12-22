@@ -2,6 +2,13 @@
 
 A Bukkit plugin that shows your world's structures (such as Villages, Strongholds, and Temples) on Dynmap.
 
+## Features
+
+* Adds markers to Dynmap where all structures are located.
+* Configure which types of structures you would like to be shown.
+* Compatible with CraftBukkit, as well as MCPC+, Cauldron and other Forge based Bukkit-compatible servers with [DynmapForge](http://www.curse.com/mc-mods/minecraft/dynmapforge) and [DynmapCBBridge](http://www.curse.com/mc-mods/minecraft/dynmapcbbridge) installed.
+* Includes compatibility with Biomes O' Plenty, including legacy (tested on 1.6.4) versions.
+
 ## Configuration
 
 The **structures** node supports boolean values for the following keys:
