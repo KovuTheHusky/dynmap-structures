@@ -141,7 +141,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 	private MarkerAPI api;
 	private FileConfiguration configuration;
 	private String[] enabled;
-	private final String[] files = { "BOPTemple.dat", "BOPVillage.dat", "Fortress.dat", "Mineshaft.dat", "Monument.dat", "Stronghold.dat", "Temple.dat", "Village.dat" };
 	private final String[] images = { "Fortress", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
 	private boolean includeCoordinates;
 	private Logger logger;
