@@ -92,7 +92,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 					if (!file.exists())
 						continue;
 					NBTCompound structures = NBTReader.read(file).<NBTCompound> get("data").<NBTCompound> get("Features");
-					if (structures == null && structures.getPayload() == null)
+					if (structures == null || structures.getPayload() == null)
 						continue;
 					for (NBT<?> temp : structures.getPayload()) {
 						NBTCompound structure = (NBTCompound) temp;
