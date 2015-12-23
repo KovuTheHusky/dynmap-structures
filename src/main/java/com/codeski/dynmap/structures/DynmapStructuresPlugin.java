@@ -54,7 +54,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 			Path path = Paths.get(directory.toURI());
 			try (WatchService watcher = path.getFileSystem().newWatchService()) {
 				path.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
-				for (; !stop;) {
+				while (!stop) {
 					WatchKey key = watcher.take();
 					List<WatchEvent<?>> events = key.pollEvents();
 					if (events.size() == 0)
