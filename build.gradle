@@ -5,7 +5,7 @@ apply plugin: 'eclipse'
 apply plugin: 'com.github.johnrengelman.shadow'
 
 group = 'com.codeski'
-version = '0.1.6-SNAPSHOT'
+version = '1.0.0'
 sourceCompatibility = '1.7'
 
 buildscript {
