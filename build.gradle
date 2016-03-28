@@ -1,19 +1,15 @@
 import org.apache.tools.ant.filters.*
 
-apply plugin: 'java'
-apply plugin: 'eclipse'
-apply plugin: 'com.github.johnrengelman.shadow'
+plugins {
+  id 'java'
+  id 'eclipse'
+  id 'idea'
+  id 'com.github.johnrengelman.shadow' version '1.2.3'
+}
 
 group = 'com.codeski'
 version = '1.0.1-SNAPSHOT'
 sourceCompatibility = '1.7'
-
-buildscript {
-  repositories { jcenter() }
-  dependencies {
-    classpath 'com.github.jengelman.gradle.plugins:shadow:1.2.3'
-  }
-}
 
 processResources {
   filesNotMatching("**/*.png") {
@@ -24,15 +20,9 @@ processResources {
 }
 
 repositories {
-  maven {
-    url = 'http://hub.codeski.com/nexus/content/groups/public/'
-  }
-  maven {
-    url = 'http://repo.bukkit.org/content/groups/public/'
-  }
-  maven {
-    url = 'http://repo.mikeprimm.com/'
-  }
+  maven { url 'http://hub.codeski.com/nexus/content/groups/public/' }
+  maven { url 'http://repo.bukkit.org/content/groups/public/' }
+  maven { url 'http://repo.mikeprimm.com/' }
 }
 
 dependencies {
