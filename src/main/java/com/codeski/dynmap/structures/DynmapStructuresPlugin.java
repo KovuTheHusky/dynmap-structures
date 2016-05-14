@@ -108,13 +108,21 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             // Check if this Temple is from Biomes O Plenty
                             if (id.equalsIgnoreCase("BOPTemple"))
                                 id = "Temple";
-                            // Check if this Temple is actually a Witch
+                            // Check if this Temple exists and if it's actually something else
                             List<NBT<?>> children = structure.<NBTList> get("Children").getPayload();
                             if (children.size() > 0 && children.get(0) instanceof NBTCompound)
-                                for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload())
-                                    if (child.getName().equalsIgnoreCase("Witch"))
-                                        if (((NBTByte) child).getPayload() > 0)
-                                            id = "Witch";
+                                for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload()) {
+                                    // Make sure this Temple is actually in the world
+                                    if (child.getName().equalsIgnoreCase("HPos") && ((NBTInteger) child).getPayload() == -1) {
+                                        id = null;
+                                        continue;
+                                    }
+                                    // Check if this Temple is actually a Igloo or Witch
+                                    if (child.getName().equalsIgnoreCase("id") && ((NBTString) child).getPayload().equalsIgnoreCase("Iglu"))
+                                        id = "Igloo";
+                                    else if (child.getName().equalsIgnoreCase("Witch") && ((NBTByte) child).getPayload() > 0)
+                                        id = "Witch";
+                                }
                         } else if (str.equalsIgnoreCase("Monument.dat")) {
                             // Make sure this Monument is actually in the world
                             if (structure.<NBTList> get("Processed").getPayload().size() == 0)
@@ -122,9 +130,11 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         } else if (str.equalsIgnoreCase("Fortress.dat"))
                             // If this world is not Nether try to get one that is
                             if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER)
-                                wn = world.getName() + "_nether";
+                            wn = world.getName() + "_nether";
                             else
-                                continue;
+                            continue;
+                        if (id == null)
+                            continue;
                         String label = id;
                         if (noLabels)
                             label = "";
@@ -141,7 +151,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
-    private final String[] images = { "Fortress", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
+    private final String[] images = { "Fortress", "Igloo", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
     private boolean includeCoordinates;
     private Logger logger;
     private boolean noLabels;
