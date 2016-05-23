@@ -19,6 +19,10 @@ The **structures** node supports boolean values for the following keys:
 
     If true, displays Nether Fortresses on your map.
 
+**igloo**
+
+    If true, displays Igloos on your map.
+
 **mineshaft**
 
     If true, displays Abandoned Mineshafts on your map. Default value is false.
