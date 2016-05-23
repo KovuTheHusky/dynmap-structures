@@ -123,6 +123,14 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                     else if (child.getName().equalsIgnoreCase("Witch") && ((NBTByte) child).getPayload() > 0)
                                         id = "Witch";
                                 }
+                            if (id == null)
+                                continue;
+                            if (id.equalsIgnoreCase("Igloo") && !configuration.getBoolean("structures.igloo"))
+                                continue;
+                            else if (id.equalsIgnoreCase("Temple") && !configuration.getBoolean("structures.temple"))
+                                continue;
+                            else if (id.equalsIgnoreCase("Witch") && !configuration.getBoolean("structures.witch"))
+                                continue;
                         } else if (str.equalsIgnoreCase("Monument.dat")) {
                             // Make sure this Monument is actually in the world
                             if (structure.<NBTList> get("Processed").getPayload().size() == 0)
@@ -205,7 +213,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                 enabled.add("Monument.dat");
             if (configuration.getBoolean("structures.stronghold"))
                 enabled.add("Stronghold.dat");
-            if (configuration.getBoolean("structures.temple") || configuration.getBoolean("structures.witch")) {
+            if (configuration.getBoolean("structures.igloo") || configuration.getBoolean("structures.temple") || configuration.getBoolean("structures.witch")) {
                 enabled.add("BOPTemple.dat");
                 enabled.add("Temple.dat");
             }
