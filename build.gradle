@@ -21,13 +21,13 @@ processResources {
 
 dependencies {
   compile 'com.codeski:NBT:0.1.2'
-  compile 'org.bukkit:bukkit:1.7.2-R0.3'
+  compile 'org.bukkit:bukkit:1.8-R0.1-SNAPSHOT'
   compile 'org.dynmap:DynmapCoreAPI:1.9.4'
 }
 
 repositories {
   maven { url 'http://hub.codeski.com/nexus/content/groups/public/' }
-  maven { url 'http://repo.bukkit.org/content/groups/public/' }
+  maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
   maven { url 'http://repo.mikeprimm.com/' }
 }
 
