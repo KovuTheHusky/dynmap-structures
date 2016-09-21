@@ -15,6 +15,14 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
+import com.codeski.nbt.NBTReader;
+import com.codeski.nbt.tags.NBT;
+import com.codeski.nbt.tags.NBTByte;
+import com.codeski.nbt.tags.NBTCompound;
+import com.codeski.nbt.tags.NBTInteger;
+import com.codeski.nbt.tags.NBTList;
+import com.codeski.nbt.tags.NBTString;
+import com.google.common.base.Joiner;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -27,15 +35,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
-
-import com.codeski.nbt.NBTReader;
-import com.codeski.nbt.tags.NBT;
-import com.codeski.nbt.tags.NBTByte;
-import com.codeski.nbt.tags.NBTCompound;
-import com.codeski.nbt.tags.NBTInteger;
-import com.codeski.nbt.tags.NBTList;
-import com.codeski.nbt.tags.NBTString;
-import com.google.common.base.Joiner;
 
 public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private class DynmapStructuresRunnable implements Runnable {
@@ -59,7 +58,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     List<WatchEvent<?>> events = key.pollEvents();
                     if (events.size() == 0)
                         continue;
-                    List<String> changed = new ArrayList<String>();
+                    List<String> changed = new ArrayList<>();
                     for (WatchEvent<?> event : events) {
                         String eventFile = event.context().toString();
                         for (String str : enabled)
@@ -91,25 +90,25 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     File file = new File(directory, str);
                     if (!file.exists())
                         continue;
-                    NBTCompound structures = NBTReader.read(file).<NBTCompound> get("data").<NBTCompound> get("Features");
+                    NBTCompound structures = NBTReader.read(file).<NBTCompound>get("data").<NBTCompound>get("Features");
                     if (structures == null || structures.getPayload() == null)
                         continue;
                     for (NBT<?> temp : structures.getPayload()) {
                         NBTCompound structure = (NBTCompound) temp;
-                        String id = structure.<NBTString> get("id").getPayload();
+                        String id = structure.<NBTString>get("id").getPayload();
                         String wn = world.getName();
-                        int x = structure.<NBTInteger> get("ChunkX").getPayload();
-                        int z = structure.<NBTInteger> get("ChunkZ").getPayload();
+                        int x = structure.<NBTInteger>get("ChunkX").getPayload();
+                        int z = structure.<NBTInteger>get("ChunkZ").getPayload();
                         if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
                             // Make sure this Village is actually in the world
-                            if (structure.<NBTByte> get("Valid") == null || structure.<NBTByte> get("Valid").getPayload() == 0)
+                            if (structure.<NBTByte>get("Valid") == null || structure.<NBTByte>get("Valid").getPayload() == 0)
                                 continue;
                         } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
                             // Check if this Temple is from Biomes O Plenty
                             if (id.equalsIgnoreCase("BOPTemple"))
                                 id = "Temple";
                             // Check if this Temple exists and if it's actually something else
-                            List<NBT<?>> children = structure.<NBTList> get("Children").getPayload();
+                            List<NBT<?>> children = structure.<NBTList>get("Children").getPayload();
                             if (children.size() > 0 && children.get(0) instanceof NBTCompound)
                                 for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload()) {
                                     // Make sure this Temple is actually in the world
@@ -133,14 +132,14 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 continue;
                         } else if (str.equalsIgnoreCase("Monument.dat")) {
                             // Make sure this Monument is actually in the world
-                            if (structure.<NBTList> get("Processed").getPayload().size() == 0)
+                            if (structure.<NBTList>get("Processed").getPayload().size() == 0)
                                 continue;
                         } else if (str.equalsIgnoreCase("Fortress.dat"))
                             // If this world is not Nether try to get one that is
                             if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER)
-                            wn = world.getName() + "_nether";
+                                wn = world.getName() + "_nether";
                             else
-                            continue;
+                                continue;
                         if (id == null)
                             continue;
                         String label = id;
@@ -159,13 +158,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
-    private final String[] images = { "Fortress", "Igloo", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch" };
+    private final String[] images = {"Fortress", "Igloo", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
     private boolean includeCoordinates;
     private Logger logger;
     private boolean noLabels;
-    private final HashMap<World, DynmapStructuresRunnable> runnables = new HashMap<World, DynmapStructuresRunnable>();
+    private final HashMap<World, DynmapStructuresRunnable> runnables = new HashMap<>();
     private MarkerSet set;
-    private final HashMap<World, Thread> threads = new HashMap<World, Thread>();
+    private final HashMap<World, Thread> threads = new HashMap<>();
 
     @Override
     public void onDisable() {
@@ -204,7 +203,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         api.getMarkerIcon("structures." + str.toLowerCase(Locale.ROOT)).setMarkerIconImage(in);
             }
             // Build an array of files to parse if changed
-            List<String> enabled = new ArrayList<String>();
+            List<String> enabled = new ArrayList<>();
             if (configuration.getBoolean("structures.fortress"))
                 enabled.add("Fortress.dat");
             if (configuration.getBoolean("structures.mineshaft"))
