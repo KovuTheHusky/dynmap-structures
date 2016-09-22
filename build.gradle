@@ -28,8 +28,8 @@ dependencies {
 
 repositories {
   maven { url 'http://hub.codeski.com/nexus/content/groups/public/' }
-  maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
-  maven { url 'https://repo.mcstats.org/content/repositories/public/' }
+  maven { url 'http://hub.spigotmc.org/nexus/content/groups/public/' }
+  maven { url 'http://repo.mcstats.org/content/repositories/public/' }
   maven { url 'http://repo.mikeprimm.com/' }
 }
 
