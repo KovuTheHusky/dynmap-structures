@@ -35,6 +35,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
+import org.mcstats.MetricsLite;
 
 public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private class DynmapStructuresRunnable implements Runnable {
@@ -172,6 +173,14 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
+        // Set up the metrics
+        try {
+            MetricsLite metrics = new MetricsLite(this);
+            metrics.start();
+        } catch (IOException e) {
+            logger.warning("Unable to enable metrics - something went wrong!");
+            e.printStackTrace();
+        }
         // Set up the configuration
         this.saveDefaultConfig();
         configuration = this.getConfig();
