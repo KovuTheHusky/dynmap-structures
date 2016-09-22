@@ -108,15 +108,10 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             // Check if this Temple is from Biomes O Plenty
                             if (id.equalsIgnoreCase("BOPTemple"))
                                 id = "Temple";
-                            // Check if this Temple exists and if it's actually something else
+                            // Check if this Temple is actually something else
                             List<NBT<?>> children = structure.<NBTList>get("Children").getPayload();
                             if (children.size() > 0 && children.get(0) instanceof NBTCompound)
                                 for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload()) {
-                                    // Make sure this Temple is actually in the world
-                                    if (child.getName().equalsIgnoreCase("HPos") && ((NBTInteger) child).getPayload() == -1) {
-                                        id = null;
-                                        continue;
-                                    }
                                     // Check if this Temple is actually a Igloo or Witch
                                     if (child.getName().equalsIgnoreCase("id") && ((NBTString) child).getPayload().equalsIgnoreCase("Iglu"))
                                         id = "Igloo";
