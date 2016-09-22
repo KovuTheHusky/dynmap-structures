@@ -168,10 +168,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private final HashMap<World, Thread> threads = new HashMap<>();
 
     @Override
-    public void onDisable() {
-    }
-
-    @Override
     public void onEnable() {
         // Set up the metrics
         try {
