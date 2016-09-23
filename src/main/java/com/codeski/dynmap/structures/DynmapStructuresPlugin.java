@@ -128,8 +128,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             }
                             if (!type.equalsIgnoreCase("TeDP") && !moved)
                                 continue;
-                            if (id == null)
-                                continue;
                             if (id.equalsIgnoreCase("Igloo") && !configuration.getBoolean("structures.igloo"))
                                 continue;
                             else if (id.equalsIgnoreCase("Temple") && !configuration.getBoolean("structures.temple"))
