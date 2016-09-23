@@ -108,16 +108,26 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             // Check if this Temple is from Biomes O Plenty
                             if (id.equalsIgnoreCase("BOPTemple"))
                                 id = "Temple";
-                            // Check if this Temple is actually something else
+                            // Check if this Temple exists and if it's actually something else
+                            String type = "";
+                            boolean moved = false;
                             List<NBT<?>> children = structure.<NBTList>get("Children").getPayload();
-                            if (children.size() > 0 && children.get(0) instanceof NBTCompound)
+                            if (children.size() > 0 && children.get(0) instanceof NBTCompound) {
                                 for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload()) {
+                                    // Check if this Temple has been moved to allow generation
+                                    if (child.getName().equalsIgnoreCase("id"))
+                                        type = child.getPayload().toString();
+                                    if (child.getName().equalsIgnoreCase("HPos"))
+                                        moved = ((NBTInteger) child).getPayload() != -1;
                                     // Check if this Temple is actually a Igloo or Witch
                                     if (child.getName().equalsIgnoreCase("id") && ((NBTString) child).getPayload().equalsIgnoreCase("Iglu"))
                                         id = "Igloo";
                                     else if (child.getName().equalsIgnoreCase("Witch") && ((NBTByte) child).getPayload() > 0)
                                         id = "Witch";
                                 }
+                            }
+                            if (!type.equalsIgnoreCase("TeDP") && !moved)
+                                continue;
                             if (id == null)
                                 continue;
                             if (id.equalsIgnoreCase("Igloo") && !configuration.getBoolean("structures.igloo"))
