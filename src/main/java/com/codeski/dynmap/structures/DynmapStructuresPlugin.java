@@ -94,7 +94,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     NBTCompound structures = NBTReader.read(file).<NBTCompound>get("data").<NBTCompound>get("Features");
                     if (structures == null || structures.getPayload() == null)
                         continue;
-                    for (NBT<?> temp : structures.getPayload()) {
+                    for (NBT<?> temp : structures) {
                         NBTCompound structure = (NBTCompound) temp;
                         String id = structure.<NBTString>get("id").getPayload();
                         String wn = world.getName();
@@ -102,32 +102,24 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         int z = structure.<NBTInteger>get("ChunkZ").getPayload();
                         if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
                             // Make sure this Village is actually in the world
-                            if (structure.<NBTByte>get("Valid") == null || structure.<NBTByte>get("Valid").getPayload() == 0)
+                            if (structure.<NBTByte>get("Valid").getPayload() == 0)
                                 continue;
                         } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
                             // Check if this Temple is from Biomes O Plenty
                             if (id.equalsIgnoreCase("BOPTemple"))
                                 id = "Temple";
                             // Check if this Temple exists and if it's actually something else
-                            String type = "";
-                            boolean moved = false;
-                            List<NBT<?>> children = structure.<NBTList>get("Children").getPayload();
-                            if (children.size() > 0 && children.get(0) instanceof NBTCompound) {
-                                for (NBT<?> child : ((NBTCompound) children.get(0)).getPayload()) {
-                                    // Check if this Temple has been moved to allow generation
-                                    if (child.getName().equalsIgnoreCase("id"))
-                                        type = child.getPayload().toString();
-                                    if (child.getName().equalsIgnoreCase("HPos"))
-                                        moved = ((NBTInteger) child).getPayload() != -1;
-                                    // Check if this Temple is actually a Igloo or Witch
-                                    if (child.getName().equalsIgnoreCase("id") && ((NBTString) child).getPayload().equalsIgnoreCase("Iglu"))
-                                        id = "Igloo";
-                                    else if (child.getName().equalsIgnoreCase("Witch") && ((NBTByte) child).getPayload() > 0)
-                                        id = "Witch";
-                                }
-                            }
-                            if (!type.equalsIgnoreCase("TeDP") && !moved)
+                            NBTCompound children = (NBTCompound) structure.<NBTList>get("Children").get(0);
+                            String type = children.<NBTString>get("id").getPayload();
+                            // All desert temples spawn at y=64 automatically
+                            if (!type.equalsIgnoreCase("TeDP") && children.<NBTInteger>get("HPos").getPayload() < 0)
                                 continue;
+                            // Check if this Temple is actually an Igloo or Witch
+                            if (type.equalsIgnoreCase("Iglu"))
+                                id = "Igloo";
+                            else if (type.equalsIgnoreCase("TeSH"))
+                                id = "Witch";
+                            // Skip this structure if it is disabled in the configuration
                             if (id.equalsIgnoreCase("Igloo") && !configuration.getBoolean("structures.igloo"))
                                 continue;
                             else if (id.equalsIgnoreCase("Temple") && !configuration.getBoolean("structures.temple"))
@@ -144,8 +136,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 wn = world.getName() + "_nether";
                             else
                                 continue;
-                        if (id == null)
-                            continue;
                         String label = id;
                         if (noLabels)
                             label = "";
