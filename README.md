@@ -23,6 +23,10 @@ The **structures** node supports boolean values for the following keys:
 
     If true, displays Igloos on your map.
 
+**mansion**
+
+    If true, displays Woodland Mansions on your map.
+
 **mineshaft**
 
     If true, displays Abandoned Mineshafts on your map. Default value is false.
