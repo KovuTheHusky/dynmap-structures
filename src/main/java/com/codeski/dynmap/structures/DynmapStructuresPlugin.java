@@ -130,12 +130,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             // Make sure this Monument is actually in the world
                             if (structure.<NBTList>get("Processed").getPayload().size() == 0)
                                 continue;
-                        } else if (str.equalsIgnoreCase("Fortress.dat"))
+                        } else if (str.equalsIgnoreCase("Fortress.dat")) {
                             // If this world is not Nether try to get one that is
                             if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER)
                                 wn = world.getName() + "_nether";
                             else
                                 continue;
+                        }
                         String label = id;
                         if (noLabels)
                             label = "";
@@ -152,7 +153,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
-    private final String[] images = {"Fortress", "Igloo", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
+    private final String[] images = {"Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
     private boolean includeCoordinates;
     private Logger logger;
     private boolean noLabels;
@@ -204,6 +205,8 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             List<String> enabled = new ArrayList<>();
             if (configuration.getBoolean("structures.fortress"))
                 enabled.add("Fortress.dat");
+            if (configuration.getBoolean("structures.mansion"))
+                enabled.add("Mansion.dat");
             if (configuration.getBoolean("structures.mineshaft"))
                 enabled.add("Mineshaft.dat");
             if (configuration.getBoolean("structures.monument"))

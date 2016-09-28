@@ -1,6 +1,7 @@
 structures:
   fortress: true
   igloo: true
+  mansion: true
   mineshaft: false
   monument: true
   stronghold: true
