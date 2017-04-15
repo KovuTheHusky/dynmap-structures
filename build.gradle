@@ -38,6 +38,7 @@ shadowJar {
     include(dependency('com.codeski:NBT'))
     include(dependency('org.bstats:bstats-bukkit'))
   }
+  relocate 'org.bstats', 'com.codeski'
 }
 
 jar.finalizedBy(shadowJar);
