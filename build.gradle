@@ -22,21 +22,21 @@ processResources {
 dependencies {
   compile 'com.codeski:NBT:0.1.2'
   compile 'org.bukkit:bukkit:1.8-R0.1-SNAPSHOT'
-  compile 'org.mcstats.bukkit:metrics-lite:R8-SNAPSHOT'
+  compile 'org.bstats:bstats-bukkit:1.1'
   compile 'org.dynmap:DynmapCoreAPI:1.9.4'
 }
 
 repositories {
   maven { url 'http://hub.codeski.com/nexus/content/groups/public/' }
   maven { url 'http://hub.spigotmc.org/nexus/content/groups/public/' }
-  maven { url 'http://repo.mcstats.org/content/repositories/public/' }
+  maven { url 'http://repo.bstats.org/content/repositories/releases/' }
   maven { url 'http://repo.mikeprimm.com/' }
 }
 
 shadowJar {
   dependencies {
     include(dependency('com.codeski:NBT'))
-    include(dependency('org.mcstats.bukkit:metrics-lite'))
+    include(dependency('org.bstats:bstats-bukkit'))
   }
 }
 
