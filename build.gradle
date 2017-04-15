@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.codeski'
-version = '1.4.0'
+version = '1.4.1-SNAPSHOT'
 sourceCompatibility = '1.7'
 
 processResources {
