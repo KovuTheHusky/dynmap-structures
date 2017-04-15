@@ -86,5 +86,6 @@ You can also place a hash in front of any of the nodes to comment it out and dis
 * Issues: <https://github.com/Codeski/dynmap-structures/issues>
 * Source: <https://github.com/Codeski/dynmap-structures>
 * Builds: <https://travis-ci.org/Codeski/dynmap-structures>
-* Bukkit: <http://dev.bukkit.org/bukkit-plugins/dynmap-structures>
-* Metrics: <http://mcstats.org/plugin/dynmap-structures>
+* Bukkit: <https://dev.bukkit.org/projects/dynmap-structures>
+* Spigot: <https://www.spigotmc.org/resources/dynmap-structures.39534>
+* Metrics: <https://bstats.org/plugin/bukkit/dynmap-structures>
