@@ -9,7 +9,7 @@ plugins {
 
 group = 'com.codeski'
 version = '1.4.1-SNAPSHOT'
-sourceCompatibility = '1.7'
+sourceCompatibility = '1.8'
 
 processResources {
   filesNotMatching("**/*.png") {
