@@ -27,7 +27,7 @@ dependencies {
 }
 
 repositories {
-  maven { url 'http://hub.codeski.com/nexus/content/groups/public/' }
+  maven { url 'https://kovuthehusky.com/nexus/content/groups/public/' }
   maven { url 'http://hub.spigotmc.org/nexus/content/groups/public/' }
   maven { url 'http://repo.bstats.org/content/repositories/releases/' }
   maven { url 'http://repo.mikeprimm.com/' }
