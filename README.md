@@ -1,8 +1,8 @@
-# Dynmap-Structures [![Build Status](https://travis-ci.org/Codeski/dynmap-structures.svg?branch=master)](https://travis-ci.org/Codeski/dynmap-structures)
+# Dynmap-Structures [![Build Status](https://travis-ci.org/KovuTheHusky/dynmap-structures.svg?branch=master)](https://travis-ci.org/KovuTheHusky/dynmap-structures)
 
 A Bukkit plugin that shows your world's structures (such as Villages, Strongholds, and Temples) on Dynmap.
 
-![Dynmap-Structures](http://codeski.com/img/dynmapstructures2.png)
+![Dynmap-Structures](https://kovuthehusky.com/assets/dynmapstructures2.png)
 
 ## Features
 
@@ -81,11 +81,11 @@ You can also place a hash in front of any of the nodes to comment it out and dis
 
 ## Links
 
-* Website: <http://codeski.com/#dynmapstructures>
-* Example: <http://codeski.com/examples/dynmap-structures>
-* Issues: <https://github.com/Codeski/dynmap-structures/issues>
-* Source: <https://github.com/Codeski/dynmap-structures>
-* Builds: <https://travis-ci.org/Codeski/dynmap-structures>
+* Website: <https://kovuthehusky.com/projects#dynmapstructures>
+* Example: <https://kovuthehusky.com/examples/dynmap-structures>
+* Issues: <https://github.com/KovuTheHusky/dynmap-structures/issues>
+* Source: <https://github.com/KovuTheHusky/dynmap-structures>
+* Builds: <https://travis-ci.org/KovuTheHusky/dynmap-structures>
 * Bukkit: <https://dev.bukkit.org/projects/dynmap-structures>
 * Spigot: <https://www.spigotmc.org/resources/dynmap-structures.39534>
 * Metrics: <https://bstats.org/plugin/bukkit/dynmap-structures>
