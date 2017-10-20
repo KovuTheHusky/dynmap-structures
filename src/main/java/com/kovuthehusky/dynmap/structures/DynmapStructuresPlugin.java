@@ -1,4 +1,4 @@
-package com.codeski.dynmap.structures;
+package com.kovuthehusky.dynmap.structures;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.logging.Logger;
 
-import com.codeski.nbt.NBTReader;
-import com.codeski.nbt.tags.NBT;
-import com.codeski.nbt.tags.NBTByte;
-import com.codeski.nbt.tags.NBTCompound;
-import com.codeski.nbt.tags.NBTInteger;
-import com.codeski.nbt.tags.NBTList;
-import com.codeski.nbt.tags.NBTString;
+import com.kovuthehusky.nbt.NBTReader;
+import com.kovuthehusky.nbt.tags.NBT;
+import com.kovuthehusky.nbt.tags.NBTByte;
+import com.kovuthehusky.nbt.tags.NBTCompound;
+import com.kovuthehusky.nbt.tags.NBTInteger;
+import com.kovuthehusky.nbt.tags.NBTList;
+import com.kovuthehusky.nbt.tags.NBTString;
 import com.google.common.base.Joiner;
 import org.bstats.Metrics;
 import org.bukkit.Bukkit;
