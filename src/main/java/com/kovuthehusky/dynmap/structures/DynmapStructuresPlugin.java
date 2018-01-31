@@ -137,19 +137,31 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             else
                                 continue;
                         }
-                        String label = id;
+                        
+                        addIDCustomTextToConfigIfMissing(id);
+                        
+                        String label = getCustomTextForId(id);
                         if (noLabels)
                             label = "";
                         else if (includeCoordinates)
-                            label = id + " [" + x * 16 + "," + z * 16 + "]";
+                            label = getCustomTextForId(id) + " [" + x * 16 + "," + z * 16 + "]";
                         set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
                     }
+                    saveConfig();
                 } catch (IOException e) {
                     e.printStackTrace(System.err);
                 }
         }
     }
 
+    private String getCustomTextForId(String id) {
+    	return configuration.getString("customLabel." + id , id);
+    }
+    
+    private void addIDCustomTextToConfigIfMissing(String id) {    	
+    	configuration.addDefault("customLabel." + id, id);
+    }
+    
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
@@ -169,6 +181,11 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         configuration = this.getConfig();
         configuration.options().copyDefaults(true);
+        
+        addIDCustomTextToConfigIfMissing("Witch");
+        addIDCustomTextToConfigIfMissing("Temple");
+        addIDCustomTextToConfigIfMissing("Igloo");
+
         this.saveConfig();
         // Register for events
         this.getServer().getPluginManager().registerEvents(this, this);
