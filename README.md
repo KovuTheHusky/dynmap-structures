@@ -6,14 +6,15 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 
 ## Features
 
-* Adds markers to Dynmap where all structures are located.
+* Adds markers to [Dynmap](https://dev.bukkit.org/projects/dynmap) where all structures are located.
 * Currently supports the following structures in the following dimensions:
     * Overworld: [Igloo](https://minecraft.gamepedia.com/Igloo), [Woodland Mansion](https://minecraft.gamepedia.com/Woodland_mansion), [Abandoned Mineshaft](https://minecraft.gamepedia.com/Abandoned_mineshaft), [Ocean Monument](https://minecraft.gamepedia.com/Ocean_monument), [Stronghold](https://minecraft.gamepedia.com/Stronghold), [Desert Temple](https://minecraft.gamepedia.com/Desert_temple), [Jungle Temple](https://minecraft.gamepedia.com/Jungle_temple), [Witch Hut](https://minecraft.gamepedia.com/Generated_structures#Witch_hut), [Village](https://minecraft.gamepedia.com/Village).
     * Nether: [Nether Fortress](https://minecraft.gamepedia.com/Nether_fortress).
     * End: [End City](https://minecraft.gamepedia.com/End_city).
 * Configure which types of structures you would like to be shown.
-* Compatible with CraftBukkit, as well as MCPC+, Cauldron and other Forge based Bukkit-compatible servers with [DynmapForge](http://www.curse.com/mc-mods/minecraft/dynmapforge) and [DynmapCBBridge](http://www.curse.com/mc-mods/minecraft/dynmapcbbridge) installed.
-* Includes compatibility with Biomes O' Plenty, including legacy (tested on 1.6.4) versions.
+* Compatible with [CraftBukkit/Spigot](https://www.spigotmc.org), as well as any other [Forge](http://www.minecraftforge.net) based Bukkit-compatible server with [DynmapForge](https://minecraft.curseforge.com/projects/dynmapforge) and [DynmapCBBridge](https://minecraft.curseforge.com/projects/dynmapcbbridge) installed.
+* Multi-world compatibility with plugins such as [Multiverse](https://dev.bukkit.org/projects/multiverse-core) installed.
+* Includes compatibility with [Biomes O' Plenty](https://minecraft.curseforge.com/projects/biomes-o-plenty).
 
 ## Configuration
 
