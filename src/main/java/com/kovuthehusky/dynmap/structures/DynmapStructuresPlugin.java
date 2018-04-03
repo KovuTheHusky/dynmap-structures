@@ -142,11 +142,14 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             if (structure.<NBTList>get("Processed").getPayload().size() == 0)
                                 continue;
                         } else if (str.equalsIgnoreCase("Fortress.dat")) {
-                            // If this world is not Nether try to get one that is
-                            if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER)
+                            if (world.getEnvironment() == Environment.NETHER) {
+                                // Make sure this is Nether
+                            } else if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER) {
+                                // If not Nether try to get one that is
                                 wn = world.getName() + "_nether";
-                            else
+                            } else {
                                 continue;
+                            }
                         }
                         String label = id;
                         if (noLabels)
