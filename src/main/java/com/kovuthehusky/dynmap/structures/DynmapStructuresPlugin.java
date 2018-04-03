@@ -102,8 +102,19 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         int z = structure.<NBTInteger>get("ChunkZ").getPayload();
                         if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
                             // Make sure this Village is actually in the world
-                            if (structure.<NBTByte>get("Valid").getPayload() == 0)
+                            if (structure.<NBTByte>get("Valid").getPayload() == 0) {
                                 continue;
+                            } else {
+                                boolean placed = false;
+                                NBTList children = structure.<NBTList>get("Children");
+                                for (NBT child : children) {
+                                    if (((NBTCompound) child).<NBTInteger>get("HPos").getPayload() >= 0)
+                                        placed = true;
+                                }
+                                if (!placed) {
+                                    continue;
+                                }
+                            }
                         } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
                             // Check if this Temple is from Biomes O Plenty
                             if (id.equalsIgnoreCase("BOPTemple"))
