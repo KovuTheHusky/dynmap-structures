@@ -150,13 +150,23 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             } else {
                                 continue;
                             }
+                        } else if (str.equalsIgnoreCase("EndCity.dat")) {
+                            id = "End City";
+                            if (world.getEnvironment() == Environment.THE_END) {
+                                // Make sure this is The End
+                            } else if (world.getEnvironment() != Environment.THE_END && Bukkit.getWorld(world.getName() + "_the_end") != null && Bukkit.getWorld(world.getName() + "_the_end").getEnvironment() == Environment.THE_END) {
+                                // If not The End try to get one that is
+                                wn = world.getName() + "_the_end";
+                            } else {
+                                continue;
+                            }
                         }
                         String label = id;
                         if (noLabels)
                             label = "";
                         else if (includeCoordinates)
                             label = id + " [" + x * 16 + "," + z * 16 + "]";
-                        set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
+                        set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT).replaceAll("\\s+", "")), false);
                     }
                 } catch (IOException e) {
                     e.printStackTrace(System.err);
@@ -167,7 +177,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
-    private final String[] images = {"Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
+    private final String[] images = {"EndCity", "Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
     private boolean includeCoordinates;
     private Logger logger;
     private boolean noLabels;
@@ -211,6 +221,8 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             }
             // Build an array of files to parse if changed
             List<String> enabled = new ArrayList<>();
+            if (configuration.getBoolean("structures.endcity"))
+                enabled.add("EndCity.dat");
             if (configuration.getBoolean("structures.fortress"))
                 enabled.add("Fortress.dat");
             if (configuration.getBoolean("structures.mansion"))
@@ -250,6 +262,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         switch (world.getEnvironment()) {
             case NORMAL:
             case NETHER:
+            case THE_END:
                 if (world.canGenerateStructures()) {
                     // Update markers for this world
                     DynmapStructuresRunnable r = new DynmapStructuresRunnable(world);
