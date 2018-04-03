@@ -23,7 +23,7 @@ import com.kovuthehusky.nbt.tags.NBTInteger;
 import com.kovuthehusky.nbt.tags.NBTList;
 import com.kovuthehusky.nbt.tags.NBTString;
 import com.google.common.base.Joiner;
-import org.bstats.Metrics;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
