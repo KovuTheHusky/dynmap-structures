@@ -15,6 +15,10 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 
 The **structures** node supports boolean values for the following keys:
 
+**endcity**
+
+    If true, displays End Cities on your map.
+
 **fortress**
 
     If true, displays Nether Fortresses on your map.
