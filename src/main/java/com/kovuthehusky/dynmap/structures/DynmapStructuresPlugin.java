@@ -98,11 +98,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     for (NBT<?> temp : structures) {
                         NBTCompound structure = (NBTCompound) temp;
                         String id = structure.<NBTString>get("id").getPayload();
+                        String image = null;
                         String wn = world.getName();
                         int x = structure.<NBTInteger>get("ChunkX").getPayload();
                         int z = structure.<NBTInteger>get("ChunkZ").getPayload();
                         if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
                             id = configuration.getString("labels.village", "Village");
+                            image = "village";
                             // Make sure this Village is actually in the world
                             if (structure.<NBTByte>get("Valid").getPayload() == 0) {
                                 continue;
@@ -119,6 +121,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             }
                         } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
                             id = configuration.getString("labels.temple", "Temple");
+                            image = "temple";
                             // Check if this Temple exists and if it's actually something else
                             NBTCompound children = (NBTCompound) structure.<NBTList>get("Children").get(0);
                             String type = children.<NBTString>get("id").getPayload();
@@ -126,10 +129,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             if (!type.equalsIgnoreCase("TeDP") && children.<NBTInteger>get("HPos").getPayload() < 0)
                                 continue;
                             // Check if this Temple is actually an Igloo or Witch
-                            if (type.equalsIgnoreCase("Iglu"))
+                            if (type.equalsIgnoreCase("Iglu")) {
                                 id = configuration.getString("labels.igloo", "Igloo");
-                            else if (type.equalsIgnoreCase("TeSH"))
+                                image = "igloo";
+                            } else if (type.equalsIgnoreCase("TeSH")) {
                                 id = configuration.getString("labels.witch", "Witch Hut");
+                                image = "witch";
+                            }
                             // Skip this structure if it is disabled in the configuration
                             if (id.equalsIgnoreCase("Igloo") && !configuration.getBoolean("structures.igloo"))
                                 continue;
@@ -139,17 +145,22 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 continue;
                         } else if (str.equalsIgnoreCase("Monument.dat")) {
                             id = configuration.getString("labels.monument", "Ocean Monument");
+                            image = "monument";
                             // Make sure this Monument is actually in the world
                             if (structure.<NBTList>get("Processed").getPayload().size() == 0)
                                 continue;
                         } else if (str.equalsIgnoreCase("Mansion.dat")) {
                             id = configuration.getString("labels.mansion", "Woodland Mansion");
+                            image = "mansion";
                         } else if (str.equalsIgnoreCase("Mineshaft.dat")) {
                             id = configuration.getString("labels.mineshaft", "Abandoned Mineshaft");
+                            image = "mineshaft";
                         } else if (str.equalsIgnoreCase("Stronghold.dat")) {
                             id = configuration.getString("labels.stronghold", "Stronghold");
+                            image = "stronghold";
                         } else if (str.equalsIgnoreCase("Fortress.dat")) {
                             id = configuration.getString("labels.fortress", "Nether Fortress");
+                            image = "fortress";
                             // If not Nether try to get it manually
                             if (world.getEnvironment() != Environment.NETHER) {
                                 if (Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER) {
@@ -160,6 +171,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             }
                         } else if (str.equalsIgnoreCase("EndCity.dat")) {
                             id = configuration.getString("labels.endcity", "End City");
+                            image = "endcity";
                             // If not The End try to get it manually
                             if (world.getEnvironment() != Environment.THE_END) {
                                 if (Bukkit.getWorld(world.getName() + "_the_end") != null && Bukkit.getWorld(world.getName() + "_the_end").getEnvironment() == Environment.THE_END) {
@@ -175,7 +187,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             label = "";
                         else if (includeCoordinates)
                             label = id + " [" + x * 16 + "," + z * 16 + "]";
-                        set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT).replaceAll("\\s+", "")), false);
+                        set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + image.toLowerCase(Locale.ROOT).replaceAll("\\s+", "")), false);
                     }
                 } catch (IOException e) {
                     e.printStackTrace(System.err);
