@@ -48,9 +48,9 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             this.world = world;
             
             if(configuration.contains("worldSettings." + world.getName())) {
-            	directory = new File(configuration.getString("worldSettings." + world.getName()), "data/");
+                directory = new File(configuration.getString("worldSettings." + world.getName()), "data/");
             } else {
-            	directory = new File(this.world.getWorldFolder(), "data/");
+                directory = new File(this.world.getWorldFolder(), "data/");
             }
         }
 
