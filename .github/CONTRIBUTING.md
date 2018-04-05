@@ -1,6 +1,6 @@
 # Contributing
 
-You agree to abide by the [code of conduct](CODE_OF_CONDUCT.md).
+You agree to abide by the [code of conduct](../CODE_OF_CONDUCT.md).
 
 ## Issue
 
