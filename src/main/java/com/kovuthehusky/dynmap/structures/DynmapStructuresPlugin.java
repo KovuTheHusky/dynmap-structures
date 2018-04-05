@@ -98,7 +98,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     for (NBT<?> temp : structures) {
                         NBTCompound structure = (NBTCompound) temp;
                         String id = structure.<NBTString>get("id").getPayload();
-                        String image = null;
+                        String image = "default";
                         String wn = world.getName();
                         int x = structure.<NBTInteger>get("ChunkX").getPayload();
                         int z = structure.<NBTInteger>get("ChunkZ").getPayload();
