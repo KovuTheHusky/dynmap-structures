@@ -20,6 +20,10 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 
 The **structures** node supports boolean values for the following keys:
 
+**deserttemple**
+
+    If true, displays Desert Temples on your map.
+
 **endcity**
 
     If true, displays End Cities on your map.
@@ -31,6 +35,10 @@ The **structures** node supports boolean values for the following keys:
 **igloo**
 
     If true, displays Igloos on your map.
+
+**jungletemple**
+
+    If true, displays Jungle Temples on your map.
 
 **mansion**
 
@@ -48,10 +56,6 @@ The **structures** node supports boolean values for the following keys:
 
     If true, displays Strongholds on your map.
 
-**temple**
-
-    If true, displays Desert Temples and Jungle Temples on your map.
-
 **witch**
 
     If true, displays Witch Huts on your map.
@@ -61,6 +65,10 @@ The **structures** node supports boolean values for the following keys:
     If true, displays Villages on your map.
 
 The **labels** node supports string values for the following keys:
+
+**deserttemple**
+
+    If set, the label for Desert Temples on your map. Default value is Desert Temple.
 
 **endcity**
 
@@ -73,6 +81,10 @@ The **labels** node supports string values for the following keys:
 **igloo**
 
     If set, the label for Igloos on your map. Default value is Igloo.
+
+**jungletemple**
+
+    If set, the label for Jungle Temples on your map. Default value is Jungle Temple.
 
 **mansion**
 
@@ -89,10 +101,6 @@ The **labels** node supports string values for the following keys:
 **stronghold**
 
     If set, the label for Strongholds on your map. Default value is Stronghold.
-
-**temple**
-
-    If set, the label for Temples on your map. Default value is Temple.
 
 **witch**
 
