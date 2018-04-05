@@ -125,8 +125,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 }
                             }
                         } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
-                            id = configuration.getString("labels.temple", "Temple");
-                            image = "temple";
                             // Check if this Temple exists and if it's actually something else
                             NBTCompound children = (NBTCompound) structure.<NBTList>get("Children").get(0);
                             String type = children.<NBTString>get("id").getPayload();
@@ -135,25 +133,26 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 continue;
                             // Check if this Temple is a Desert Temple, Jungle Temple, Igloo or Witch
                             if (type.equalsIgnoreCase("TeDP")) {
+                                if (!configuration.getBoolean("structures.deserttemple"))
+                                    continue;
                                 id = configuration.getString("labels.deserttemple", "Desert Temple");
                                 image = "deserttemple";
                             } else if (type.equalsIgnoreCase("TeJP")) {
+                                if (!configuration.getBoolean("structures.jungletemple"))
+                                    continue;
                                 id = configuration.getString("labels.jungletemple", "Jungle Temple");
                                 image = "jungletemple";
                             } else if (type.equalsIgnoreCase("Iglu")) {
+                                if (!configuration.getBoolean("structures.igloo"))
+                                    continue;
                                 id = configuration.getString("labels.igloo", "Igloo");
                                 image = "igloo";
                             } else if (type.equalsIgnoreCase("TeSH")) {
+                                if (!configuration.getBoolean("structures.witch"))
+                                    continue;
                                 id = configuration.getString("labels.witch", "Witch Hut");
                                 image = "witch";
                             }
-                            // Skip this structure if it is disabled in the configuration
-                            if (id.equalsIgnoreCase("Igloo") && !configuration.getBoolean("structures.igloo"))
-                                continue;
-                            else if (id.equalsIgnoreCase("Temple") && !configuration.getBoolean("structures.temple"))
-                                continue;
-                            else if (id.equalsIgnoreCase("Witch") && !configuration.getBoolean("structures.witch"))
-                                continue;
                         } else if (str.equalsIgnoreCase("Monument.dat")) {
                             id = configuration.getString("labels.monument", "Ocean Monument");
                             image = "monument";
@@ -265,7 +264,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                 enabled.add("Monument.dat");
             if (configuration.getBoolean("structures.stronghold"))
                 enabled.add("Stronghold.dat");
-            if (configuration.getBoolean("structures.igloo") || configuration.getBoolean("structures.temple") || configuration.getBoolean("structures.witch")) {
+            if (configuration.getBoolean("structures.igloo") || configuration.getBoolean("structures.deserttemple") || configuration.getBoolean("structures.jungletemple") || configuration.getBoolean("structures.witch")) {
                 enabled.add("BOPTemple.dat");
                 enabled.add("Temple.dat");
             }

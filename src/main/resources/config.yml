@@ -1,23 +1,25 @@
 structures:
+  deserttemple: true
   endcity: true
   fortress: true
   igloo: true
+  jungletemple: true
   mansion: true
   mineshaft: false
   monument: true
   stronghold: true
-  temple: true
   witch: true
   village: true
 #labels:
+#  deserttemple: "Desert Temple"
 #  endcity: "End City"
 #  fortress: "Nether Fortress"
 #  igloo: "Igloo"
+#  jungletemple: "Jungle Temple"
 #  mansion: "Woodland Mansion"
 #  mineshaft: "Abandoned Mineshaft"
 #  monument: "Ocean Monument"
 #  stronghold: "Stronghold"
-#  temple: "Temple"
 #  witch: "Witch Hut"
 #  village: "Village"
 layer:
