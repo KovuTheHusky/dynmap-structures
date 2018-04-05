@@ -130,11 +130,17 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             // Check if this Temple exists and if it's actually something else
                             NBTCompound children = (NBTCompound) structure.<NBTList>get("Children").get(0);
                             String type = children.<NBTString>get("id").getPayload();
-                            // All desert temples spawn at y=64 automatically
+                            // All desert temples spawn at y=64 automatically, skip anything else that isn't placed
                             if (!type.equalsIgnoreCase("TeDP") && children.<NBTInteger>get("HPos").getPayload() < 0)
                                 continue;
-                            // Check if this Temple is actually an Igloo or Witch
-                            if (type.equalsIgnoreCase("Iglu")) {
+                            // Check if this Temple is a Desert Temple, Jungle Temple, Igloo or Witch
+                            if (type.equalsIgnoreCase("TeDP")) {
+                                id = configuration.getString("labels.deserttemple", "Desert Temple");
+                                image = "deserttemple";
+                            } else if (type.equalsIgnoreCase("TeJP")) {
+                                id = configuration.getString("labels.jungletemple", "Jungle Temple");
+                                image = "jungletemple";
+                            } else if (type.equalsIgnoreCase("Iglu")) {
                                 id = configuration.getString("labels.igloo", "Igloo");
                                 image = "igloo";
                             } else if (type.equalsIgnoreCase("TeSH")) {
@@ -203,7 +209,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
-    private final String[] images = {"EndCity", "Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
+    private final String[] images = {"EndCity", "Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "DesertTemple", "JungleTemple", "Village", "Witch"};
     private boolean includeCoordinates;
     private Logger logger;
     private boolean noLabels;
