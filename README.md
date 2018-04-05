@@ -8,7 +8,7 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 
 * Adds markers to [Dynmap](https://dev.bukkit.org/projects/dynmap) where all structures are located.
 * Currently supports the following structures in the following dimensions:
-    * Overworld: [Igloo](https://minecraft.gamepedia.com/Igloo), [Woodland Mansion](https://minecraft.gamepedia.com/Woodland_mansion), [Abandoned Mineshaft](https://minecraft.gamepedia.com/Abandoned_mineshaft), [Ocean Monument](https://minecraft.gamepedia.com/Ocean_monument), [Stronghold](https://minecraft.gamepedia.com/Stronghold), [Desert Temple](https://minecraft.gamepedia.com/Desert_temple), [Jungle Temple](https://minecraft.gamepedia.com/Jungle_temple), [Witch Hut](https://minecraft.gamepedia.com/Generated_structures#Witch_hut), [Village](https://minecraft.gamepedia.com/Village).
+    * Overworld: [Desert Temple](https://minecraft.gamepedia.com/Desert_temple), [Igloo](https://minecraft.gamepedia.com/Igloo), [Jungle Temple](https://minecraft.gamepedia.com/Jungle_temple), [Woodland Mansion](https://minecraft.gamepedia.com/Woodland_mansion), [Abandoned Mineshaft](https://minecraft.gamepedia.com/Abandoned_mineshaft), [Ocean Monument](https://minecraft.gamepedia.com/Ocean_monument), [Stronghold](https://minecraft.gamepedia.com/Stronghold), [Witch Hut](https://minecraft.gamepedia.com/Generated_structures#Witch_hut), [Village](https://minecraft.gamepedia.com/Village).
     * Nether: [Nether Fortress](https://minecraft.gamepedia.com/Nether_fortress).
     * End: [End City](https://minecraft.gamepedia.com/End_city).
 * Configure which types of structures you would like to be shown.
