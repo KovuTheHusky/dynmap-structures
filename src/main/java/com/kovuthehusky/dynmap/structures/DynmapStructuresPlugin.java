@@ -23,7 +23,7 @@ import com.kovuthehusky.nbt.tags.NBTInteger;
 import com.kovuthehusky.nbt.tags.NBTList;
 import com.kovuthehusky.nbt.tags.NBTString;
 import com.google.common.base.Joiner;
-import org.bstats.Metrics;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -102,8 +102,19 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         int z = structure.<NBTInteger>get("ChunkZ").getPayload();
                         if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
                             // Make sure this Village is actually in the world
-                            if (structure.<NBTByte>get("Valid").getPayload() == 0)
+                            if (structure.<NBTByte>get("Valid").getPayload() == 0) {
                                 continue;
+                            } else {
+                                boolean placed = false;
+                                NBTList children = structure.<NBTList>get("Children");
+                                for (NBT child : children) {
+                                    if (((NBTCompound) child).<NBTInteger>get("HPos").getPayload() >= 0)
+                                        placed = true;
+                                }
+                                if (!placed) {
+                                    continue;
+                                }
+                            }
                         } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
                             // Check if this Temple is from Biomes O Plenty
                             if (id.equalsIgnoreCase("BOPTemple"))
@@ -131,11 +142,24 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             if (structure.<NBTList>get("Processed").getPayload().size() == 0)
                                 continue;
                         } else if (str.equalsIgnoreCase("Fortress.dat")) {
-                            // If this world is not Nether try to get one that is
-                            if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER)
+                            if (world.getEnvironment() == Environment.NETHER) {
+                                // Make sure this is Nether
+                            } else if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER) {
+                                // If not Nether try to get one that is
                                 wn = world.getName() + "_nether";
-                            else
+                            } else {
                                 continue;
+                            }
+                        } else if (str.equalsIgnoreCase("EndCity.dat")) {
+                            id = "End City";
+                            if (world.getEnvironment() == Environment.THE_END) {
+                                // Make sure this is The End
+                            } else if (world.getEnvironment() != Environment.THE_END && Bukkit.getWorld(world.getName() + "_the_end") != null && Bukkit.getWorld(world.getName() + "_the_end").getEnvironment() == Environment.THE_END) {
+                                // If not The End try to get one that is
+                                wn = world.getName() + "_the_end";
+                            } else {
+                                continue;
+                            }
                         }
                         
                         addIDCustomTextToConfigIfMissing(id);
@@ -145,7 +169,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             label = "";
                         else if (includeCoordinates)
                             label = getCustomTextForId(id) + " [" + x * 16 + "," + z * 16 + "]";
-                        set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT)), false);
+                        set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT).replaceAll("\\s+", "")), false);
                     }
                     saveConfig();
                 } catch (IOException e) {
@@ -165,7 +189,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
-    private final String[] images = {"Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
+    private final String[] images = {"EndCity", "Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "Temple", "Village", "Witch"};
     private boolean includeCoordinates;
     private Logger logger;
     private boolean noLabels;
@@ -214,6 +238,8 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             }
             // Build an array of files to parse if changed
             List<String> enabled = new ArrayList<>();
+            if (configuration.getBoolean("structures.endcity"))
+                enabled.add("EndCity.dat");
             if (configuration.getBoolean("structures.fortress"))
                 enabled.add("Fortress.dat");
             if (configuration.getBoolean("structures.mansion"))
@@ -253,6 +279,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         switch (world.getEnvironment()) {
             case NORMAL:
             case NETHER:
+            case THE_END:
                 if (world.canGenerateStructures()) {
                     // Update markers for this world
                     DynmapStructuresRunnable r = new DynmapStructuresRunnable(world);

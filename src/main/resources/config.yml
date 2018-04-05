@@ -1,4 +1,5 @@
 structures:
+  endcity: true
   fortress: true
   igloo: true
   mansion: true
