@@ -37,13 +37,14 @@ import org.dynmap.DynmapCommonAPI;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
+@SuppressWarnings("unused")
 public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private class DynmapStructuresRunnable implements Runnable {
         private final File directory;
         private boolean stop = false;
         private final World world;
 
-        public DynmapStructuresRunnable(World world) {
+        private DynmapStructuresRunnable(World world) {
             this.world = world;
             directory = new File(this.world.getWorldFolder(), "data/");
         }
@@ -67,7 +68,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 changed.add(str);
                     }
                     if (changed.size() > 0)
-                        this.update(changed.toArray(new String[changed.size()]));
+                        this.update(changed.toArray(new String[0]));
                     if (!key.reset()) {
                         logger.warning("Something went wrong with the watch service and it must be stopped. Sorry!");
                         stop = true;
@@ -79,11 +80,11 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             logger.info("Removing thread for world '" + world.getName() + "'.");
         }
 
-        public void stop() {
+        private void stop() {
             stop = true;
         }
 
-        public void update(String[] changed) {
+        private void update(String[] changed) {
             logger.info("Updating markers for world '" + world.getName() + "'.");
             logger.info("Updating: " + Joiner.on(", ").join(changed));
             for (String str : changed)
@@ -91,7 +92,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     File file = new File(directory, str);
                     if (!file.exists())
                         continue;
-                    NBTCompound structures = NBTReader.read(file).<NBTCompound>get("data").<NBTCompound>get("Features");
+                    NBTCompound structures = NBTReader.read(file).<NBTCompound>get("data").get("Features");
                     if (structures == null || structures.getPayload() == null)
                         continue;
                     for (NBT<?> temp : structures) {
@@ -106,7 +107,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 continue;
                             } else {
                                 boolean placed = false;
-                                NBTList children = structure.<NBTList>get("Children");
+                                NBTList children = structure.get("Children");
                                 for (NBT child : children) {
                                     if (((NBTCompound) child).<NBTInteger>get("HPos").getPayload() >= 0)
                                         placed = true;
@@ -142,23 +143,23 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             if (structure.<NBTList>get("Processed").getPayload().size() == 0)
                                 continue;
                         } else if (str.equalsIgnoreCase("Fortress.dat")) {
-                            if (world.getEnvironment() == Environment.NETHER) {
-                                // Make sure this is Nether
-                            } else if (world.getEnvironment() != Environment.NETHER && Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER) {
-                                // If not Nether try to get one that is
-                                wn = world.getName() + "_nether";
-                            } else {
-                                continue;
+                            // If not Nether try to get it manually
+                            if (world.getEnvironment() != Environment.NETHER) {
+                                if (Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER) {
+                                    wn = world.getName() + "_nether";
+                                } else {
+                                    continue;
+                                }
                             }
                         } else if (str.equalsIgnoreCase("EndCity.dat")) {
                             id = "End City";
-                            if (world.getEnvironment() == Environment.THE_END) {
-                                // Make sure this is The End
-                            } else if (world.getEnvironment() != Environment.THE_END && Bukkit.getWorld(world.getName() + "_the_end") != null && Bukkit.getWorld(world.getName() + "_the_end").getEnvironment() == Environment.THE_END) {
-                                // If not The End try to get one that is
-                                wn = world.getName() + "_the_end";
-                            } else {
-                                continue;
+                            // If not The End try to get it manually
+                            if (world.getEnvironment() != Environment.THE_END) {
+                                if (Bukkit.getWorld(world.getName() + "_the_end") != null && Bukkit.getWorld(world.getName() + "_the_end").getEnvironment() == Environment.THE_END) {
+                                    wn = world.getName() + "_the_end";
+                                } else {
+                                    continue;
+                                }
                             }
                         }
                         String label = id;
@@ -181,9 +182,8 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private boolean includeCoordinates;
     private Logger logger;
     private boolean noLabels;
-    private final HashMap<World, DynmapStructuresRunnable> runnables = new HashMap<>();
+    private final HashMap<World, DynmapStructuresRunnable> threads = new HashMap<>();
     private MarkerSet set;
-    private final HashMap<World, Thread> threads = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -241,7 +241,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                 enabled.add("BOPVillage.dat");
                 enabled.add("Village.dat");
             }
-            this.enabled = enabled.toArray(new String[enabled.size()]);
+            this.enabled = enabled.toArray(new String[0]);
             // Parse the worlds that have already been loaded
             for (World w : Bukkit.getWorlds())
                 this.addWorld(w);
@@ -271,8 +271,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     Thread t = new Thread(r);
                     t.setPriority(Thread.MIN_PRIORITY);
                     t.start();
-                    runnables.put(world, r);
-                    threads.put(world, t);
+                    threads.put(world, r);
                 }
                 break;
             default:
@@ -280,8 +279,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     }
 
     private void removeWorld(World world) {
-        runnables.get(world).stop();
-        runnables.remove(world);
+        threads.get(world).stop();
         threads.remove(world);
     }
 }
