@@ -102,6 +102,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         int x = structure.<NBTInteger>get("ChunkX").getPayload();
                         int z = structure.<NBTInteger>get("ChunkZ").getPayload();
                         if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
+                            id = configuration.getString("labels.village", "Village");
                             // Make sure this Village is actually in the world
                             if (structure.<NBTByte>get("Valid").getPayload() == 0) {
                                 continue;
@@ -117,9 +118,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 }
                             }
                         } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
-                            // Check if this Temple is from Biomes O Plenty
-                            if (id.equalsIgnoreCase("BOPTemple"))
-                                id = "Temple";
+                            id = configuration.getString("labels.temple", "Temple");
                             // Check if this Temple exists and if it's actually something else
                             NBTCompound children = (NBTCompound) structure.<NBTList>get("Children").get(0);
                             String type = children.<NBTString>get("id").getPayload();
@@ -128,9 +127,9 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 continue;
                             // Check if this Temple is actually an Igloo or Witch
                             if (type.equalsIgnoreCase("Iglu"))
-                                id = "Igloo";
+                                id = configuration.getString("labels.igloo", "Igloo");
                             else if (type.equalsIgnoreCase("TeSH"))
-                                id = "Witch";
+                                id = configuration.getString("labels.witch", "Witch Hut");
                             // Skip this structure if it is disabled in the configuration
                             if (id.equalsIgnoreCase("Igloo") && !configuration.getBoolean("structures.igloo"))
                                 continue;
@@ -139,10 +138,18 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             else if (id.equalsIgnoreCase("Witch") && !configuration.getBoolean("structures.witch"))
                                 continue;
                         } else if (str.equalsIgnoreCase("Monument.dat")) {
+                            id = configuration.getString("labels.monument", "Ocean Monument");
                             // Make sure this Monument is actually in the world
                             if (structure.<NBTList>get("Processed").getPayload().size() == 0)
                                 continue;
+                        } else if (str.equalsIgnoreCase("Mansion.dat")) {
+                            id = configuration.getString("labels.mansion", "Woodland Mansion");
+                        } else if (str.equalsIgnoreCase("Mineshaft.dat")) {
+                            id = configuration.getString("labels.mineshaft", "Abandoned Mineshaft");
+                        } else if (str.equalsIgnoreCase("Stronghold.dat")) {
+                            id = configuration.getString("labels.stronghold", "Stronghold");
                         } else if (str.equalsIgnoreCase("Fortress.dat")) {
+                            id = configuration.getString("labels.fortress", "Nether Fortress");
                             // If not Nether try to get it manually
                             if (world.getEnvironment() != Environment.NETHER) {
                                 if (Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER) {
@@ -152,7 +159,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 }
                             }
                         } else if (str.equalsIgnoreCase("EndCity.dat")) {
-                            id = "End City";
+                            id = configuration.getString("labels.endcity", "End City");
                             // If not The End try to get it manually
                             if (world.getEnvironment() != Environment.THE_END) {
                                 if (Bukkit.getWorld(world.getName() + "_the_end") != null && Bukkit.getWorld(world.getName() + "_the_end").getEnvironment() == Environment.THE_END) {
@@ -162,31 +169,20 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                                 }
                             }
                         }
-                        
-                        addIDCustomTextToConfigIfMissing(id);
-                        
-                        String label = getCustomTextForId(id);
+
+                        String label = id;
                         if (noLabels)
                             label = "";
                         else if (includeCoordinates)
-                            label = getCustomTextForId(id) + " [" + x * 16 + "," + z * 16 + "]";
+                            label = id + " [" + x * 16 + "," + z * 16 + "]";
                         set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + id.toLowerCase(Locale.ROOT).replaceAll("\\s+", "")), false);
                     }
-                    saveConfig();
                 } catch (IOException e) {
                     e.printStackTrace(System.err);
                 }
         }
     }
 
-    private String getCustomTextForId(String id) {
-    	return configuration.getString("customLabel." + id , id);
-    }
-    
-    private void addIDCustomTextToConfigIfMissing(String id) {    	
-    	configuration.addDefault("customLabel." + id, id);
-    }
-    
     private MarkerAPI api;
     private FileConfiguration configuration;
     private String[] enabled;
@@ -205,10 +201,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         configuration = this.getConfig();
         configuration.options().copyDefaults(true);
-        
-        addIDCustomTextToConfigIfMissing("Witch");
-        addIDCustomTextToConfigIfMissing("Temple");
-        addIDCustomTextToConfigIfMissing("Igloo");
 
         this.saveConfig();
         // Register for events
