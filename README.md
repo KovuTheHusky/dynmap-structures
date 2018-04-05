@@ -60,6 +60,48 @@ The **structures** node supports boolean values for the following keys:
 
     If true, displays Villages on your map.
 
+The **labels** node supports string values for the following keys:
+
+**endcity**
+
+    If set, the label for End Cities on your map. Default value is End City.
+
+**fortress**
+
+    If set, the label for Nether Fortresses on your map. Default value is Nether Fortress.
+
+**igloo**
+
+    If set, the label for Igloos on your map. Default value is Igloo.
+
+**mansion**
+
+    If set, the label for Woodland Mansions on your map. Default value is Woodland Mansion.
+
+**mineshaft**
+
+    If set, the label for Abandoned Mineshafts on your map. Default value is Abandoned Mineshaft.
+
+**monument**
+
+    If set, the label for Ocean Monuments on your map. Default value is Ocean Monument.
+
+**stronghold**
+
+    If set, the label for Strongholds on your map. Default value is Stronghold.
+
+**temple**
+
+    If set, the label for Temples on your map. Default value is Temple.
+
+**witch**
+
+    If set, the label for Witch Huts on your map. Default value is Witch Hut.
+
+**village**
+
+    If set, the label for Villages on your map. Default value is Village.
+
 The **layer** node supports the following key-value pairs:
 
 **name**
