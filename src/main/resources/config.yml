@@ -1,14 +1,17 @@
 structures:
-  deserttemple: true
+  buriedtreasure: true
+  desertpyramid: true
   endcity: true
   fortress: true
   igloo: true
-  jungletemple: true
+  junglepyramid: true
   mansion: true
   mineshaft: false
   monument: true
+  oceanruins: true
+  shipwreck: true
   stronghold: true
-  witch: true
+  swamphut: true
   village: true
 layer:
   name: "Structures"

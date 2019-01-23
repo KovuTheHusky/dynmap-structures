@@ -1,219 +1,80 @@
 package com.kovuthehusky.dynmap.structures;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
+import java.io.*;
+import java.util.*;
 import java.util.logging.Logger;
 
-import com.kovuthehusky.nbt.NBTReader;
-import com.kovuthehusky.nbt.tags.NBT;
-import com.kovuthehusky.nbt.tags.NBTByte;
-import com.kovuthehusky.nbt.tags.NBTCompound;
-import com.kovuthehusky.nbt.tags.NBTInteger;
-import com.kovuthehusky.nbt.tags.NBTList;
-import com.kovuthehusky.nbt.tags.NBTString;
-import com.google.common.base.Joiner;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.World;
+import org.bukkit.Location;
+import org.bukkit.StructureType;
 import org.bukkit.World.Environment;
+import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.world.WorldLoadEvent;
-import org.bukkit.event.world.WorldUnloadEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
+import static org.bukkit.StructureType.*;
+import static org.bukkit.block.Biome.*;
+
 @SuppressWarnings("unused")
 public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
-    private class DynmapStructuresRunnable implements Runnable {
-        private final File directory;
-        private boolean stop = false;
-        private final World world;
-
-        private DynmapStructuresRunnable(World world) {
-            this.world = world;
-
-            if(configuration.contains("locations." + world.getName())) {
-                directory = new File(configuration.getString("locations." + world.getName()), "data/");
-            } else {
-                directory = new File(this.world.getWorldFolder(), "data/");
-            }
-        }
-
-        @Override
-        public void run() {
-            logger.info("Adding thread for world '" + world.getName() + "'.");
-            Path path = Paths.get(directory.toURI());
-            try (WatchService watcher = path.getFileSystem().newWatchService()) {
-                path.register(watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_MODIFY);
-                while (!stop) {
-                    WatchKey key = watcher.take();
-                    List<WatchEvent<?>> events = key.pollEvents();
-                    if (events.size() == 0)
-                        continue;
-                    List<String> changed = new ArrayList<>();
-                    for (WatchEvent<?> event : events) {
-                        String eventFile = event.context().toString();
-                        for (String str : enabled)
-                            if (str.equalsIgnoreCase(eventFile) && !changed.contains(str))
-                                changed.add(str);
-                    }
-                    if (changed.size() > 0)
-                        this.update(changed.toArray(new String[0]));
-                    if (!key.reset()) {
-                        logger.warning("Something went wrong with the watch service and it must be stopped. Sorry!");
-                        stop = true;
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace(System.err);
-            }
-            logger.info("Removing thread for world '" + world.getName() + "'.");
-        }
-
-        private void stop() {
-            stop = true;
-        }
-
-        private void update(String[] changed) {
-            logger.info("Updating markers for world '" + world.getName() + "'.");
-            logger.info("Updating: " + Joiner.on(", ").join(changed));
-            for (String str : changed)
-                try {
-                    File file = new File(directory, str);
-                    if (!file.exists())
-                        continue;
-                    NBTCompound structures = NBTReader.read(file).<NBTCompound>get("data").get("Features");
-                    if (structures == null || structures.getPayload() == null)
-                        continue;
-                    for (NBT<?> temp : structures) {
-                        NBTCompound structure = (NBTCompound) temp;
-                        String id = structure.<NBTString>get("id").getPayload();
-                        String image = "default";
-                        String wn = world.getName();
-                        int x = structure.<NBTInteger>get("ChunkX").getPayload();
-                        int z = structure.<NBTInteger>get("ChunkZ").getPayload();
-                        if (str.equalsIgnoreCase("Village.dat") || str.equalsIgnoreCase("BOPVillage.dat")) {
-                            id = configuration.getString("labels.village", "Village");
-                            image = "village";
-                            // Make sure this Village is actually in the world
-                            if (structure.<NBTByte>get("Valid").getPayload() == 0) {
-                                continue;
-                            } else {
-                                boolean placed = false;
-                                NBTList children = structure.get("Children");
-                                for (NBT child : children) {
-                                    if (((NBTCompound) child).<NBTInteger>get("HPos").getPayload() >= 0)
-                                        placed = true;
-                                }
-                                if (!placed) {
-                                    continue;
-                                }
-                            }
-                        } else if (str.equalsIgnoreCase("Temple.dat") || str.equalsIgnoreCase("BOPTemple.dat")) {
-                            // Check if this Temple exists and if it's actually something else
-                            NBTCompound children = (NBTCompound) structure.<NBTList>get("Children").get(0);
-                            String type = children.<NBTString>get("id").getPayload();
-                            // All desert temples spawn at y=64 automatically, skip anything else that isn't placed
-                            if (!type.equalsIgnoreCase("TeDP") && children.<NBTInteger>get("HPos").getPayload() < 0)
-                                continue;
-                            // Check if this Temple is a Desert Temple, Jungle Temple, Igloo or Witch
-                            if (type.equalsIgnoreCase("TeDP")) {
-                                if (!configuration.getBoolean("structures.deserttemple"))
-                                    continue;
-                                id = configuration.getString("labels.deserttemple", "Desert Temple");
-                                image = "deserttemple";
-                            } else if (type.equalsIgnoreCase("TeJP")) {
-                                if (!configuration.getBoolean("structures.jungletemple"))
-                                    continue;
-                                id = configuration.getString("labels.jungletemple", "Jungle Temple");
-                                image = "jungletemple";
-                            } else if (type.equalsIgnoreCase("Iglu")) {
-                                if (!configuration.getBoolean("structures.igloo"))
-                                    continue;
-                                id = configuration.getString("labels.igloo", "Igloo");
-                                image = "igloo";
-                            } else if (type.equalsIgnoreCase("TeSH")) {
-                                if (!configuration.getBoolean("structures.witch"))
-                                    continue;
-                                id = configuration.getString("labels.witch", "Witch Hut");
-                                image = "witch";
-                            }
-                        } else if (str.equalsIgnoreCase("Monument.dat")) {
-                            id = configuration.getString("labels.monument", "Ocean Monument");
-                            image = "monument";
-                            // Make sure this Monument is actually in the world
-                            if (structure.<NBTList>get("Processed").getPayload().size() == 0)
-                                continue;
-                        } else if (str.equalsIgnoreCase("Mansion.dat")) {
-                            id = configuration.getString("labels.mansion", "Woodland Mansion");
-                            image = "mansion";
-                        } else if (str.equalsIgnoreCase("Mineshaft.dat")) {
-                            id = configuration.getString("labels.mineshaft", "Abandoned Mineshaft");
-                            image = "mineshaft";
-                        } else if (str.equalsIgnoreCase("Stronghold.dat")) {
-                            id = configuration.getString("labels.stronghold", "Stronghold");
-                            image = "stronghold";
-                        } else if (str.equalsIgnoreCase("Fortress.dat")) {
-                            id = configuration.getString("labels.fortress", "Nether Fortress");
-                            image = "fortress";
-                            // If not Nether try to get it manually
-                            if (world.getEnvironment() != Environment.NETHER) {
-                                if (Bukkit.getWorld(world.getName() + "_nether") != null && Bukkit.getWorld(world.getName() + "_nether").getEnvironment() == Environment.NETHER) {
-                                    wn = world.getName() + "_nether";
-                                } else {
-                                    continue;
-                                }
-                            }
-                        } else if (str.equalsIgnoreCase("EndCity.dat")) {
-                            id = configuration.getString("labels.endcity", "End City");
-                            image = "endcity";
-                            // If not The End try to get it manually
-                            if (world.getEnvironment() != Environment.THE_END) {
-                                if (Bukkit.getWorld(world.getName() + "_the_end") != null && Bukkit.getWorld(world.getName() + "_the_end").getEnvironment() == Environment.THE_END) {
-                                    wn = world.getName() + "_the_end";
-                                } else {
-                                    continue;
-                                }
-                            }
-                        }
-
-                        String label = id;
-                        if (noLabels)
-                            label = "";
-                        else if (includeCoordinates)
-                            label = id + " [" + x * 16 + "," + z * 16 + "]";
-                        set.createMarker(id + "," + x + "," + z, label, wn, x * 16, 64, z * 16, api.getMarkerIcon("structures." + image.toLowerCase(Locale.ROOT).replaceAll("\\s+", "")), false);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace(System.err);
-                }
-        }
-    }
-
     private MarkerAPI api;
+    private Set<Chunk> chunks = new HashSet<>();
     private FileConfiguration configuration;
-    private String[] enabled;
-    private final String[] images = {"EndCity", "Fortress", "Igloo", "Mansion", "Mineshaft", "Monument", "Stronghold", "DesertTemple", "JungleTemple", "Village", "Witch"};
     private boolean includeCoordinates;
     private Logger logger;
+    private Set<Marker> markers = new HashSet<>();
     private boolean noLabels;
-    private final HashMap<World, DynmapStructuresRunnable> threads = new HashMap<>();
     private MarkerSet set;
+
+    private static final Map<String, String> LABELS = new HashMap<String, String>() {{
+        put("buriedtreasure", "Buried Treasure");
+        put("desertpyramid", "Desert Temple");
+        put("endcity", "End City");
+        put("fortress", "Nether Fortress");
+        put("igloo", "Igloo");
+        put("junglepyramid", "Jungle Temple");
+        put("mansion", "Woodland Mansion");
+        put("mineshaft", "Abandoned Mineshaft");
+        put("monument", "Ocean Monument");
+        put("oceanruin", "Underwater Ruins");
+        put("shipwreck", "Shipwreck");
+        put("stronghold", "Stronghold");
+        put("swamphut", "Witch Hut");
+        put("village", "Village");
+    }};
+    private static final Set<Biome> BIOMES_VILLAGE = new HashSet<Biome>() {{
+        add(PLAINS);
+        add(DESERT);
+        add(SAVANNA);
+        add(TAIGA);
+        add(SUNFLOWER_PLAINS);
+        add(DESERT_HILLS);
+        add(DESERT_LAKES);
+        add(SAVANNA_PLATEAU);
+        add(SHATTERED_SAVANNA);
+        add(SHATTERED_SAVANNA_PLATEAU);
+        add(TAIGA_HILLS);
+        add(TAIGA_MOUNTAINS);
+    }};
+    private static final Set<Biome> BIOMES_DESERT_TEMPLE = new HashSet<Biome>() {{
+       add(DESERT);
+       add(DESERT_HILLS);
+       add(DESERT_LAKES);
+    }};
+    private static final Set<Biome> BIOMES_JUNGLE_TEMPLE = new HashSet<Biome>() {{
+        add(JUNGLE);
+        add(JUNGLE_EDGE);
+        add(JUNGLE_HILLS);
+        add(MODIFIED_JUNGLE);
+        add(MODIFIED_JUNGLE_EDGE);
+    }};
 
     @Override
     public void onEnable() {
@@ -223,7 +84,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         this.saveDefaultConfig();
         configuration = this.getConfig();
         configuration.options().copyDefaults(true);
-
         this.saveConfig();
         // Register for events
         this.getServer().getPluginManager().registerEvents(this, this);
@@ -242,75 +102,211 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                 set.setMinZoom(minZoom);
             includeCoordinates = configuration.getBoolean("layer.inc-coord");
             // Create the marker icons
-            for (String str : images) {
-                InputStream in = this.getClass().getResourceAsStream("/" + str.toLowerCase(Locale.ROOT) + ".png");
+            for (StructureType type : StructureType.getStructureTypes().values()) {
+                String str = type.getName().toLowerCase(Locale.ROOT).replaceAll("_", "");
+                InputStream in = this.getClass().getResourceAsStream("/" + str + ".png");
                 if (in != null)
-                    if (api.getMarkerIcon("structures." + str.toLowerCase(Locale.ROOT)) == null)
-                        api.createMarkerIcon("structures." + str.toLowerCase(Locale.ROOT), str, in);
+                    if (api.getMarkerIcon("structures." + str) == null)
+                        api.createMarkerIcon("structures." + str, str, in);
                     else
-                        api.getMarkerIcon("structures." + str.toLowerCase(Locale.ROOT)).setMarkerIconImage(in);
+                        api.getMarkerIcon("structures." + str).setMarkerIconImage(in);
             }
-            // Build an array of files to parse if changed
-            List<String> enabled = new ArrayList<>();
-            if (configuration.getBoolean("structures.endcity"))
-                enabled.add("EndCity.dat");
-            if (configuration.getBoolean("structures.fortress"))
-                enabled.add("Fortress.dat");
-            if (configuration.getBoolean("structures.mansion"))
-                enabled.add("Mansion.dat");
-            if (configuration.getBoolean("structures.mineshaft"))
-                enabled.add("Mineshaft.dat");
-            if (configuration.getBoolean("structures.monument"))
-                enabled.add("Monument.dat");
-            if (configuration.getBoolean("structures.stronghold"))
-                enabled.add("Stronghold.dat");
-            if (configuration.getBoolean("structures.igloo") || configuration.getBoolean("structures.deserttemple") || configuration.getBoolean("structures.jungletemple") || configuration.getBoolean("structures.witch")) {
-                enabled.add("BOPTemple.dat");
-                enabled.add("Temple.dat");
-            }
-            if (configuration.getBoolean("structures.village")) {
-                enabled.add("BOPVillage.dat");
-                enabled.add("Village.dat");
-            }
-            this.enabled = enabled.toArray(new String[0]);
-            // Parse the worlds that have already been loaded
-            for (World w : Bukkit.getWorlds())
-                this.addWorld(w);
-        }
-    }
-
-    @EventHandler
-    public void onWorldLoad(WorldLoadEvent event) {
-        this.addWorld(event.getWorld());
-    }
-
-    @EventHandler
-    public void onWorldUnload(WorldUnloadEvent event) {
-        this.removeWorld(event.getWorld());
-    }
-
-    private void addWorld(World world) {
-        switch (world.getEnvironment()) {
-            case NORMAL:
-            case NETHER:
-            case THE_END:
-                if (world.canGenerateStructures()) {
-                    // Update markers for this world
-                    DynmapStructuresRunnable r = new DynmapStructuresRunnable(world);
-                    r.update(enabled);
-                    // Add a thread to watch this world for changes
-                    Thread t = new Thread(r);
-                    t.setPriority(Thread.MIN_PRIORITY);
-                    t.start();
-                    threads.put(world, r);
+            // Set up ignored chunks
+            try {
+                File uri = new File(this.getDataFolder(), "chunks.dat");
+                if (uri.exists()) {
+                    FileInputStream file = new FileInputStream(uri);
+                    ObjectInputStream reader = new ObjectInputStream(file);
+                    while (true) {
+                        try {
+                            this.chunks = (Set<Chunk>) reader.readObject();
+                        } catch (Exception ex) {
+                            break;
+                        }
+                    }
                 }
-                break;
-            default:
+            } catch (Exception ex) {
+                System.err.println("Failed to read: " + ex);
+                ex.printStackTrace();
+            }
+            // Set up existing markers
+            try {
+                File uri = new File(this.getDataFolder(), "markers.dat");
+                if (uri.exists()) {
+                    FileInputStream file = new FileInputStream(uri);
+                    ObjectInputStream reader = new ObjectInputStream(file);
+                    while (true) {
+                        try {
+                            this.markers = (Set<Marker>) reader.readObject();
+                        } catch (Exception ex) {
+                            break;
+                        }
+                    }
+                }
+            } catch (Exception ex) {
+                System.err.println("Failed to read: " + ex);
+                ex.printStackTrace();
+            }
+            for (Marker marker : this.markers) {
+                this.pin(marker);
+            }
         }
     }
 
-    private void removeWorld(World world) {
-        threads.get(world).stop();
-        threads.remove(world);
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        Location loc = new Location(event.getWorld(), event.getChunk().getX() << 4, 64, event.getChunk().getZ() << 4);
+        if (chunks.contains(new Chunk(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockZ()))) {
+            return;
+        } else {
+            chunks.add(new Chunk(loc.getWorld().getName(), loc.getBlockX(), loc.getBlockZ()));
+            try {
+                File uri = new File(this.getDataFolder(), "chunks.dat");
+                FileOutputStream file = new FileOutputStream(uri);
+                ObjectOutputStream writer = new ObjectOutputStream(file);
+                writer.writeObject(chunks);
+                writer.close();
+                file.close();
+            } catch (Exception ex) {
+                System.err.println("Failed to write: " + ex);
+                ex.printStackTrace();
+            }
+        }
+        if (configuration.getBoolean("structures.mineshaft")) {
+            Location structure = event.getWorld().locateNearestStructure(loc, MINESHAFT, 1, false);
+            if (structure != null)
+                this.pin(MINESHAFT, structure);
+        }
+        if (configuration.getBoolean("structures.buriedtreasure")) {
+            Location structure = event.getWorld().locateNearestStructure(loc, BURIED_TREASURE, 1, false);
+            if (structure != null)
+                this.pin(BURIED_TREASURE, structure);
+        }
+        if (configuration.getBoolean("structures.desertpyramid")) {
+            Biome biome = event.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
+            if (BIOMES_DESERT_TEMPLE.contains(biome)) {
+                Location structure = event.getWorld().locateNearestStructure(loc, DESERT_PYRAMID, 1, false);
+                if (structure != null)
+                    this.pin(DESERT_PYRAMID, structure);
+            }
+        }
+        if (configuration.getBoolean("structures.endcity")) {
+            if (event.getWorld().getEnvironment() == Environment.THE_END) {
+                Location structure = event.getWorld().locateNearestStructure(loc, END_CITY, 1, false);
+                if (structure != null)
+                    this.pin(END_CITY, structure);
+            }
+        }
+        if (configuration.getBoolean("structures.igloo")) {
+            Biome biome = event.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
+            if (biome == SNOWY_TAIGA || biome == SNOWY_TUNDRA) {
+                Location structure = event.getWorld().locateNearestStructure(loc, IGLOO, 1, false);
+                if (structure != null)
+                    this.pin(IGLOO, structure);
+            }
+        }
+        if (configuration.getBoolean("structures.junglepyramid")) {
+            Biome biome = event.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
+            if (BIOMES_JUNGLE_TEMPLE.contains(biome)) {
+                Location structure = event.getWorld().locateNearestStructure(loc, JUNGLE_PYRAMID, 1, false);
+                if (structure != null)
+                    this.pin(JUNGLE_PYRAMID, structure);
+            }
+        }
+        if (configuration.getBoolean("structures.fortress")) {
+            if (event.getWorld().getEnvironment() == Environment.NETHER) {
+                Location structure = event.getWorld().locateNearestStructure(loc, NETHER_FORTRESS, 1, false);
+                if (structure != null)
+                    this.pin(NETHER_FORTRESS, structure);
+            }
+        }
+        if (configuration.getBoolean("structures.monument")) {
+            Location structure = event.getWorld().locateNearestStructure(loc, OCEAN_MONUMENT, 1, false);
+            if (structure != null)
+                this.pin(OCEAN_MONUMENT, structure);
+        }
+        if (configuration.getBoolean("structures.shipwreck")) {
+            Location structure = event.getWorld().locateNearestStructure(loc, SHIPWRECK, 1, false);
+            if (structure != null)
+                this.pin(SHIPWRECK, structure);
+        }
+        if (configuration.getBoolean("structures.stronghold")) {
+            Location structure = event.getWorld().locateNearestStructure(loc, STRONGHOLD, 1, false);
+            if (structure != null)
+                this.pin(STRONGHOLD, structure);
+        }
+        if (configuration.getBoolean("structures.oceanruins")) {
+            Location structure = event.getWorld().locateNearestStructure(loc, OCEAN_RUIN, 1, false);
+            if (structure != null)
+                this.pin(OCEAN_RUIN, structure);
+        }
+        if (configuration.getBoolean("structures.village")) {
+            Biome biome = event.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
+            if (BIOMES_VILLAGE.contains(biome)) {
+                Location structure = event.getWorld().locateNearestStructure(loc, VILLAGE, 1, false);
+                if (structure != null)
+                    this.pin(VILLAGE, structure);
+            }
+        }
+        if (configuration.getBoolean("structures.swamphut")) {
+            Biome biome = event.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
+            if (biome == SWAMP) {
+                Location structure = event.getWorld().locateNearestStructure(loc, SWAMP_HUT, 1, false);
+                if (structure != null)
+                    this.pin(SWAMP_HUT, structure);
+            }
+        }
+        if (configuration.getBoolean("structures.mansion")) {
+            Biome biome = event.getWorld().getBiome(loc.getBlockX(), loc.getBlockZ());
+            if (biome == DARK_FOREST || biome == DARK_FOREST_HILLS) {
+                Location structure = event.getWorld().locateNearestStructure(loc, WOODLAND_MANSION, 1, false);
+                if (structure != null)
+                    this.pin(WOODLAND_MANSION, structure);
+            }
+        }
+    }
+
+    private void pin(StructureType type, Location location) {
+        String id = type.getName().toLowerCase(Locale.ROOT).replaceAll("_", "");
+        String world = location.getWorld().getName();
+        int x = location.getBlockX();
+        int z = location.getBlockZ();
+
+        // Add to marker file
+        Marker marker = new Marker(id, world, x, z);
+        if (markers.contains(marker)) {
+            return;
+        } else {
+            markers.add(marker);
+            try {
+                File uri = new File(this.getDataFolder(), "markers.dat");
+                FileOutputStream file = new FileOutputStream(uri);
+                ObjectOutputStream writer = new ObjectOutputStream(file);
+                writer.writeObject(markers);
+                writer.close();
+                file.close();
+            } catch (Exception ex) {
+                System.err.println("Failed to write: " + ex);
+                ex.printStackTrace();
+            }
+            // Actually create the marker
+            this.pin(marker);
+        }
+    }
+
+    private void pin(Marker marker) {
+        String id = marker.id;
+        String world = marker.world;
+        int x = marker.x;
+        int z = marker.z;
+
+        String label = "";
+        if (!noLabels) {
+            label = configuration.getString("labels." + id, LABELS.get(id));
+            if (includeCoordinates)
+                label = label + " [" + x * 16 + "," + z * 16 + "]";
+        }
+
+        set.createMarker(id + "," + x + "," + z, label, world, x, 64, z, api.getMarkerIcon("structures." + id), false);
     }
 }
