@@ -15,7 +15,6 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 * Localize or change the labels to anything you would like.
 * Compatible with [CraftBukkit/Spigot](https://www.spigotmc.org), as well as any other [Forge](http://www.minecraftforge.net) based Bukkit-compatible server with [DynmapForge](https://minecraft.curseforge.com/projects/dynmapforge) and [DynmapCBBridge](https://minecraft.curseforge.com/projects/dynmapcbbridge) installed.
 * Multi-world compatibility with plugins such as [Multiverse](https://dev.bukkit.org/projects/multiverse-core) installed.
-* Includes compatibility with [Biomes O' Plenty](https://minecraft.curseforge.com/projects/biomes-o-plenty).
 
 ## Configuration
 
