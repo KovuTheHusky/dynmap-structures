@@ -134,12 +134,6 @@ The **labels** node supports string values for the following keys:
 
     If set, the label for Villages on your map. Default value is Village.
 
-The **locations** node supports the following key-value pairs:
-
-**\<world name\>** e.g. world, world_nether, world_the_end
-
-    A string representing the path to the world folder for the world with the name specified.
-
 The **layer** node supports the following key-value pairs:
 
 **name**
