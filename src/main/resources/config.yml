@@ -1,5 +1,5 @@
 structures:
-  buriedtreasure: true
+  buriedtreasure: false
   desertpyramid: true
   endcity: true
   fortress: true
