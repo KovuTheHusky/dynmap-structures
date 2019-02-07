@@ -22,31 +22,31 @@ The **structures** node supports boolean values for the following keys:
 
 **buriedtreasure**
 
-    If true, displays Buried Treasures on your map.
+    If true, displays Buried Treasures on your map. Default value is false.
 
 **desertpyramid**
 
-    If true, displays Desert Pyramids on your map.
+    If true, displays Desert Pyramids on your map. Default value is true.
 
 **endcity**
 
-    If true, displays End Cities on your map.
+    If true, displays End Cities on your map. Default value is true.
 
 **fortress**
 
-    If true, displays Nether Fortresses on your map.
+    If true, displays Nether Fortresses on your map. Default value is true.
 
 **igloo**
 
-    If true, displays Igloos on your map.
+    If true, displays Igloos on your map. Default value is true.
 
 **junglepyramid**
 
-    If true, displays Jungle Pyramids on your map.
+    If true, displays Jungle Pyramids on your map. Default value is true.
 
 **mansion**
 
-    If true, displays Woodland Mansions on your map.
+    If true, displays Woodland Mansions on your map. Default value is true.
 
 **mineshaft**
 
@@ -54,27 +54,27 @@ The **structures** node supports boolean values for the following keys:
 
 **monument**
 
-    If true, displays Ocean Monuments on your map.
+    If true, displays Ocean Monuments on your map. Default value is true.
 
 **oceanruins**
 
-    If true, displays Underwater Ruins on your map.
+    If true, displays Underwater Ruins on your map. Default value is true.
 
 **shipwreck**
 
-    If true, displays Shipwrecks on your map.
+    If true, displays Shipwrecks on your map. Default value is false.
 
 **stronghold**
 
-    If true, displays Strongholds on your map.
+    If true, displays Strongholds on your map. Default value is true.
 
 **witch**
 
-    If true, displays Witch Huts on your map.
+    If true, displays Witch Huts on your map. Default value is true.
 
 **village**
 
-    If true, displays Villages on your map.
+    If true, displays Villages on your map. Default value is true.
 
 The **labels** node supports string values for the following keys:
 
