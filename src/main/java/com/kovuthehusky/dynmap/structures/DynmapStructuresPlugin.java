@@ -5,13 +5,16 @@ import java.util.*;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.StructureType;
 import org.bukkit.World.Environment;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
@@ -163,6 +166,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private MarkerAPI api;
     private FileConfiguration configuration;
     private MarkerSet set;
+    private Map<Player, Chunk> chunks;
 
     @Override
     public void onEnable() {
@@ -207,18 +211,36 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        Location chunk = new Location(event.getWorld(), event.getChunk().getX() << 4, 64, event.getChunk().getZ() << 4);
-        for (StructureType type : ENVIRONMENTS.get(event.getWorld().getEnvironment())) {
+        if ((configuration.getBoolean("events.chunk-generate.enabled") && event.isNewChunk()) || configuration.getBoolean("events.chunk-load.enabled")) {
+            this.process(event.getChunk(), 1);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (configuration.getBoolean("events.player-move.enabled")) {
+            Chunk chunk = event.getTo().getChunk();
+            Chunk old = chunks.get(event.getPlayer());
+            if (!(chunk.getWorld() == old.getWorld() && chunk.getX() == old.getX() && chunk.getZ() == old.getZ())) {
+                chunks.put(event.getPlayer(), chunk);
+                this.process(chunk, configuration.getInt("events.player-move.radius", 1));
+            }
+        }
+    }
+
+    private void process(Chunk chunk, int radius) {
+        Location location = new Location(chunk.getWorld(), chunk.getX() << 4, 64, chunk.getZ() << 4);
+        for (StructureType type : ENVIRONMENTS.get(location.getWorld().getEnvironment())) {
             String id = type.getName().toLowerCase(Locale.ROOT).replaceAll("_", "");
             if (configuration.getBoolean("structures." + id)) {
                 Location structure = null;
                 if (BIOMES.containsKey(type)) {
-                    Biome biome = event.getWorld().getBiome(chunk.getBlockX(), chunk.getBlockZ());
+                    Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockZ());
                     if (BIOMES.get(type).contains(biome)) {
-                        structure = event.getWorld().locateNearestStructure(chunk, type, 1, false);
+                        structure = location.getWorld().locateNearestStructure(location, type, radius, false);
                     }
                 } else {
-                    structure = event.getWorld().locateNearestStructure(chunk, type, 1, false);
+                    structure = location.getWorld().locateNearestStructure(location, type, radius, false);
                 }
                 if (structure != null) {
                     String world = structure.getWorld().getName();
