@@ -9,7 +9,7 @@ structures:
   mineshaft: false
   monument: true
   oceanruins: true
-  shipwreck: true
+  shipwreck: false
   stronghold: true
   swamphut: true
   village: true
