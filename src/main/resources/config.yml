@@ -13,14 +13,6 @@ structures:
   stronghold: true
   swamphut: true
   village: true
-events:
-  chunk-generate:
-    enabled: false
-  chunk-load:
-    enabled: false
-  player-move:
-    enabled: true
-    radius: 1
 layer:
   name: "Structures"
   hidebydefault: false
