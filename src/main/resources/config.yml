@@ -8,7 +8,7 @@ structures:
   mansion: true
   mineshaft: false
   monument: true
-  oceanruins: true
+  oceanruin: true
   shipwreck: false
   stronghold: true
   swamphut: true
