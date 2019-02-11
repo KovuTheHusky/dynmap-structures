@@ -56,7 +56,7 @@ The **structures** node supports boolean values for the following keys:
 
     If true, displays Ocean Monuments on your map. Default value is true.
 
-**oceanruins**
+**oceanruin**
 
     If true, displays Underwater Ruins on your map. Default value is true.
 
@@ -114,7 +114,7 @@ The **labels** node supports string values for the following keys:
 
     If set, the label for Ocean Monuments on your map. Default value is Ocean Monument.
 
-**oceanruins**
+**oceanruin**
 
     If set, the label for Underwater Ruins on your map. Default value is Underwater Ruins.
 
