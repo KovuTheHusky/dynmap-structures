@@ -1,4 +1,4 @@
-# Dynmap-Structures [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Build Status](https://travis-ci.org/KovuTheHusky/dynmap-structures.svg?branch=master)](https://travis-ci.org/KovuTheHusky/dynmap-structures)
+# Dynmap-Structures [![Project Status: Active – The project has reached a stable, usable state and is being actively developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active) [![Build Status](https://travis-ci.com/KovuTheHusky/dynmap-structures.svg?branch=master)](https://travis-ci.com/KovuTheHusky/dynmap-structures)
 
 A Bukkit plugin that shows your world's structures (such as Villages, Strongholds, and Pyramids) on Dynmap.
 
