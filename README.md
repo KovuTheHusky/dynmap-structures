@@ -168,7 +168,7 @@ You can also place a hash in front of any of the nodes to comment it out and dis
 * Example: <https://kovuthehusky.com/examples/dynmap-structures>
 * Issues: <https://github.com/KovuTheHusky/dynmap-structures/issues>
 * Source: <https://github.com/KovuTheHusky/dynmap-structures>
-* Builds: <https://travis-ci.org/KovuTheHusky/dynmap-structures>
+* Builds: <https://travis-ci.com/KovuTheHusky/dynmap-structures>
 * Bukkit: <https://dev.bukkit.org/projects/dynmap-structures>
 * Spigot: <https://www.spigotmc.org/resources/dynmap-structures.39534>
 * Metrics: <https://bstats.org/plugin/bukkit/dynmap-structures>
