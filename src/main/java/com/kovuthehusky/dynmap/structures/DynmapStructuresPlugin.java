@@ -14,6 +14,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.dynmap.DynmapCommonAPI;
+import org.dynmap.markers.Marker;
 import org.dynmap.markers.MarkerAPI;
 import org.dynmap.markers.MarkerSet;
 
@@ -166,6 +167,22 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         api.createMarkerIcon("structures." + str, str, in);
                     } else {
                         api.getMarkerIcon("structures." + str).setMarkerIconImage(in);
+                    }
+                }
+            }
+            // Remove any markers for disabled types
+            List<String> disabled = new ArrayList<>();
+            for (StructureType type : StructureType.getStructureTypes().values()) {
+                String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
+                if (!configuration.getBoolean("structures." + id)) {
+                    disabled.add(id);
+                }
+            }
+            for (Marker marker : set.getMarkers()) {
+                for (String id : disabled) {
+                    if (marker.getMarkerID().startsWith(id)) {
+                        marker.deleteMarker();
+                        break;
                     }
                 }
             }
