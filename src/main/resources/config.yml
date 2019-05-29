@@ -9,6 +9,7 @@ structures:
   mineshaft: false
   monument: true
   oceanruin: false
+  pillageroutpost: true
   shipwreck: false
   stronghold: true
   swamphut: true

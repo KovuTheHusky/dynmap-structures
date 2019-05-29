@@ -35,6 +35,9 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         put(MINESHAFT, "Abandoned Mineshaft");
         put(OCEAN_MONUMENT, "Ocean Monument");
         put(OCEAN_RUIN, "Underwater Ruins");
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            put(PILLAGER_OUTPOST, "Pillager Outpost");
+        }
         put(SHIPWRECK, "Shipwreck");
         put(STRONGHOLD, "Stronghold");
         put(SWAMP_HUT, "Witch Hut");
@@ -58,25 +61,53 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         this.saveConfig();
         // Fill in biome data structure
         BIOMES[OCEAN.ordinal()] = new StructureType[] {BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
-        BIOMES[PLAINS.ordinal()] =  new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[DESERT.ordinal()] = new StructureType[] {DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[PLAINS.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[PLAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[DESERT.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[DESERT.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[MOUNTAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[FOREST.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
-        BIOMES[TAIGA.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[TAIGA.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[SWAMP.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, SWAMP_HUT};
         BIOMES[RIVER.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[NETHER.ordinal()] = new StructureType[] {NETHER_FORTRESS};
         BIOMES[THE_END.ordinal()] = new StructureType[] {END_CITY};
         BIOMES[FROZEN_OCEAN.ordinal()] = new StructureType[] {BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[FROZEN_RIVER.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
-        BIOMES[SNOWY_TUNDRA.ordinal()] = new StructureType[] {IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SNOWY_MOUNTAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SNOWY_TUNDRA.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SNOWY_TUNDRA.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
+        }
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SNOWY_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SNOWY_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[MUSHROOM_FIELDS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[MUSHROOM_FIELD_SHORE.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[BEACH.ordinal()] = new StructureType[] {BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
-        BIOMES[DESERT_HILLS.ordinal()] = new StructureType[] {DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[DESERT_HILLS.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[DESERT_HILLS.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[WOODED_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
-        BIOMES[TAIGA_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[MOUNTAIN_EDGE.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[JUNGLE.ordinal()] = new StructureType[] {JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
         BIOMES[JUNGLE_HILLS.ordinal()] = new StructureType[] {JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
@@ -87,13 +118,29 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[BIRCH_FOREST.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[BIRCH_FOREST_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[DARK_FOREST.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, WOODLAND_MANSION};
-        BIOMES[SNOWY_TAIGA.ordinal()] = new StructureType[] {IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SNOWY_TAIGA_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SNOWY_TAIGA.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SNOWY_TAIGA.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
+        }
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SNOWY_TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SNOWY_TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[GIANT_TREE_TAIGA.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[GIANT_TREE_TAIGA_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[WOODED_MOUNTAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
-        BIOMES[SAVANNA.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SAVANNA_PLATEAU.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SAVANNA.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SAVANNA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SAVANNA_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SAVANNA_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[BADLANDS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[WOODED_BADLANDS_PLATEAU.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[BADLANDS_PLATEAU.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
@@ -109,24 +156,52 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[DEEP_COLD_OCEAN.ordinal()] = new StructureType[] {BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[DEEP_FROZEN_OCEAN.ordinal()] = new StructureType[] {BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[THE_VOID.ordinal()] = new StructureType[] {};
-        BIOMES[SUNFLOWER_PLAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[DESERT_LAKES.ordinal()] = new StructureType[] {DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SUNFLOWER_PLAINS.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SUNFLOWER_PLAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[DESERT_LAKES.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[DESERT_LAKES.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[GRAVELLY_MOUNTAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[FLOWER_FOREST.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
-        BIOMES[TAIGA_MOUNTAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[TAIGA_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[TAIGA_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[SWAMP_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, SWAMP_HUT};
-        BIOMES[ICE_SPIKES.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[ICE_SPIKES.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[ICE_SPIKES.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[MODIFIED_JUNGLE.ordinal()] = new StructureType[] {JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_JUNGLE_EDGE.ordinal()] = new StructureType[] {JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
         BIOMES[TALL_BIRCH_FOREST.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[TALL_BIRCH_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[DARK_FOREST_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, WOODLAND_MANSION};
-        BIOMES[SNOWY_TAIGA_MOUNTAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SNOWY_TAIGA_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SNOWY_TAIGA_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[GIANT_SPRUCE_TAIGA.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[GIANT_SPRUCE_TAIGA_HILLS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_GRAVELLY_MOUNTAINS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
-        BIOMES[SHATTERED_SAVANNA.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SHATTERED_SAVANNA_PLATEAU.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD, VILLAGE};
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SHATTERED_SAVANNA.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SHATTERED_SAVANNA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
+        if (Bukkit.getBukkitVersion().startsWith("1.14")) {
+            BIOMES[SHATTERED_SAVANNA_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, PILLAGER_OUTPOST, STRONGHOLD, VILLAGE};
+        } else {
+            BIOMES[SHATTERED_SAVANNA_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        }
         BIOMES[ERODED_BADLANDS.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_WOODED_BADLANDS_PLATEAU.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_BADLANDS_PLATEAU.ordinal()] = new StructureType[] {MINESHAFT, STRONGHOLD};

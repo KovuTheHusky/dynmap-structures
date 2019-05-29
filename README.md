@@ -8,7 +8,7 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 
 * Adds markers to [Dynmap](https://dev.bukkit.org/projects/dynmap) where all structures are located.
 * Currently supports the following structures in the following dimensions:
-    * Overworld: [Abandoned Mineshaft](https://minecraft.gamepedia.com/Abandoned_mineshaft), [Buried Treasure](https://minecraft.gamepedia.com/Buried_treasure), [Desert Pyramid](https://minecraft.gamepedia.com/Desert_pyramid), [Igloo](https://minecraft.gamepedia.com/Igloo), [Jungle Pyramid](https://minecraft.gamepedia.com/Jungle_pyramid), [Ocean Monument](https://minecraft.gamepedia.com/Ocean_monument), [Shipwreck](https://minecraft.gamepedia.com/Shipwreck), [Stronghold](https://minecraft.gamepedia.com/Stronghold), [Underwater Ruins](https://minecraft.gamepedia.com/Underwater_ruins), [Village](https://minecraft.gamepedia.com/Village), [Witch Hut](https://minecraft.gamepedia.com/Witch_hut), [Woodland Mansion](https://minecraft.gamepedia.com/Woodland_mansion).
+    * Overworld: [Abandoned Mineshaft](https://minecraft.gamepedia.com/Abandoned_mineshaft), [Buried Treasure](https://minecraft.gamepedia.com/Buried_treasure), [Desert Pyramid](https://minecraft.gamepedia.com/Desert_pyramid), [Igloo](https://minecraft.gamepedia.com/Igloo), [Jungle Pyramid](https://minecraft.gamepedia.com/Jungle_pyramid), [Ocean Monument](https://minecraft.gamepedia.com/Ocean_monument), [Pillager Outpost](https://minecraft.gamepedia.com/Pillager_outpost), [Shipwreck](https://minecraft.gamepedia.com/Shipwreck), [Stronghold](https://minecraft.gamepedia.com/Stronghold), [Underwater Ruins](https://minecraft.gamepedia.com/Underwater_ruins), [Village](https://minecraft.gamepedia.com/Village), [Witch Hut](https://minecraft.gamepedia.com/Witch_hut), [Woodland Mansion](https://minecraft.gamepedia.com/Woodland_mansion).
     * Nether: [Nether Fortress](https://minecraft.gamepedia.com/Nether_fortress).
     * End: [End City](https://minecraft.gamepedia.com/End_city).
 * Configure which types of structures you would like to be shown.
@@ -59,6 +59,10 @@ The **structures** node supports boolean values for the following keys:
 **oceanruin**
 
     If true, displays Underwater Ruins on your map. Default value is true.
+
+**pillageroutpost**
+
+    If true, displays Pillager Outposts on your map. Default value is true.
 
 **shipwreck**
 
@@ -117,6 +121,10 @@ The **labels** node supports string values for the following keys:
 **oceanruin**
 
     If set, the label for Underwater Ruins on your map. Default value is Underwater Ruins.
+
+**pillageroutpost**
+
+    If set, the label for Pillager Outposts on your map. Default value is Pillager Outpost.
 
 **shipwreck**
 
