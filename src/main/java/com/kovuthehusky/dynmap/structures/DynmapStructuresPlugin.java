@@ -218,8 +218,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(this, this);
         // Check if Dynmap is even enabled
         if (Bukkit.getPluginManager().isPluginEnabled("dynmap")) {
+            try {
+                // Set up our Dynmap api
+                api = ((DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap")).getMarkerAPI();
+            } catch (NullPointerException e) {
+                return;
+            }
             // Set up our Dynmap layer
-            api = ((DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap")).getMarkerAPI();
             String layer = configuration.getString("layer.name");
             set = api.getMarkerSet(layer.toLowerCase(Locale.ROOT));
             if (set == null) {
