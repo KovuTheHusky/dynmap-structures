@@ -157,13 +157,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         if (Bukkit.getPluginManager().isPluginEnabled("dynmap")) {
             try {
                 // Set up our Dynmap api
-                api = ((DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap")).getMarkerAPI();
+                api = ((DynmapCommonAPI) Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("dynmap"))).getMarkerAPI();
             } catch (NullPointerException e) {
                 return;
             }
             // Set up our Dynmap layer
-            String layer = configuration.getString("layer.name");
-            set = api.getMarkerSet(layer.toLowerCase(Locale.ROOT));
+            String layer = configuration.getString("layer.name", "Structures");
+            set = api.getMarkerSet(Objects.requireNonNull(layer).toLowerCase(Locale.ROOT));
             if (set == null) {
                 set = api.createMarkerSet(layer.toLowerCase(Locale.ROOT), layer, null, true);
             }
@@ -209,13 +209,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         Location location = new Location(event.getChunk().getWorld(), event.getChunk().getX() << 4, 64, event.getChunk().getZ() << 4);
-        Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockZ());
+        Biome biome = Objects.requireNonNull(location.getWorld()).getBiome(location.getBlockX(), location.getBlockZ());
         for (StructureType type : BIOMES[biome.ordinal()]) {
             if (STRUCTURES.get(type)) {
                 Location structure = location.getWorld().locateNearestStructure(location, type, 1, false);
                 if (structure != null) {
                     String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
-                    String world = structure.getWorld().getName();
+                    String world = Objects.requireNonNull(structure.getWorld()).getName();
                     int x = structure.getBlockX();
                     int z = structure.getBlockZ();
                     String label = "";
