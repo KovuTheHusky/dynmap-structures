@@ -2,4 +2,5 @@ name: dynmap-structures
 main: com.kovuthehusky.dynmap.structures.DynmapStructuresPlugin
 version: @version@
 api-version: 1.13
+authors: [KovuTheHusky]
 depend: [dynmap]
