@@ -5,6 +5,7 @@ import java.util.*;
 
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.StructureType;
 import org.bukkit.block.Biome;
@@ -208,24 +209,39 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        Location location = new Location(event.getChunk().getWorld(), event.getChunk().getX() << 4, 64, event.getChunk().getZ() << 4);
-        Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockZ());
-        for (StructureType type : BIOMES[biome.ordinal()]) {
-            if (STRUCTURES.get(type)) {
-                Location structure = location.getWorld().locateNearestStructure(location, type, 1, false);
-                if (structure != null) {
-                    String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
-                    String world = structure.getWorld().getName();
-                    int x = structure.getBlockX();
-                    int z = structure.getBlockZ();
-                    String label = "";
-                    if (!noLabels) {
-                        label = LABELS.get(type);
-                        if (includeCoordinates) {
-                            label = label + " [" + x * 16 + "," + z * 16 + "]";
+        if (event.getWorld().canGenerateStructures()) {
+            new Thread(new DynmapStructuresRunnable(event.getChunk())).start();
+        }
+    }
+
+    private class DynmapStructuresRunnable implements Runnable {
+        private Chunk chunk;
+
+        private DynmapStructuresRunnable(Chunk chunk) {
+            this.chunk = chunk;
+        }
+
+        @Override
+        public void run() {
+            Location location = new Location(chunk.getWorld(), chunk.getX() << 4, 64, chunk.getZ() << 4);
+            Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockZ());
+            for (StructureType type : BIOMES[biome.ordinal()]) {
+                if (STRUCTURES.get(type)) {
+                    Location structure = location.getWorld().locateNearestStructure(location, type, 1, false);
+                    if (structure != null) {
+                        String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
+                        String world = structure.getWorld().getName();
+                        int x = structure.getBlockX();
+                        int z = structure.getBlockZ();
+                        String label = "";
+                        if (!noLabels) {
+                            label = LABELS.get(type);
+                            if (includeCoordinates) {
+                                label = label + " [" + x * 16 + "," + z * 16 + "]";
+                            }
                         }
+                        set.createMarker(id + "," + x + "," + z, label, world, x, 64, z, api.getMarkerIcon("structures." + id), true);
                     }
-                    set.createMarker(id + "," + x + "," + z, label, world, x, 64, z, api.getMarkerIcon("structures." + id), true);
                 }
             }
         }
