@@ -4,10 +4,7 @@ import java.io.*;
 import java.util.*;
 
 import org.bstats.bukkit.Metrics;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.StructureType;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
@@ -156,14 +153,20 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         this.getServer().getPluginManager().registerEvents(this, this);
         // Check if Dynmap is even enabled
         if (Bukkit.getPluginManager().isPluginEnabled("dynmap")) {
+            // Set up our Dynmap api
             try {
-                // Set up our Dynmap api
-                api = ((DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap")).getMarkerAPI();
+                DynmapCommonAPI plugin = (DynmapCommonAPI) Bukkit.getPluginManager().getPlugin("dynmap");
+                if (plugin != null) {
+                    api = plugin.getMarkerAPI();
+                }
             } catch (NullPointerException e) {
                 return;
             }
             // Set up our Dynmap layer
-            String layer = configuration.getString("layer.name", "Structures");
+            String layer = configuration.getString("layer.name");
+            if (layer == null) {
+                layer = "Structures";
+            }
             set = api.getMarkerSet(layer.toLowerCase(Locale.ROOT));
             if (set == null) {
                 set = api.createMarkerSet(layer.toLowerCase(Locale.ROOT), layer, null, true);
@@ -224,23 +227,31 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         @Override
         public void run() {
             Location location = new Location(chunk.getWorld(), chunk.getX() << 4, 64, chunk.getZ() << 4);
-            Biome biome = location.getWorld().getBiome(location.getBlockX(), location.getBlockZ());
-            for (StructureType type : BIOMES[biome.ordinal()]) {
-                if (STRUCTURES.get(type)) {
-                    Location structure = location.getWorld().locateNearestStructure(location, type, 1, false);
-                    if (structure != null) {
-                        String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
-                        String world = structure.getWorld().getName();
-                        int x = structure.getBlockX();
-                        int z = structure.getBlockZ();
-                        String label = "";
-                        if (!noLabels) {
-                            label = LABELS.get(type);
-                            if (includeCoordinates) {
-                                label = label + " [" + x * 16 + "," + z * 16 + "]";
-                            }
+            World world = location.getWorld();
+            if (world != null) {
+                Biome biome = world.getBiome(location.getBlockX(), location.getBlockZ());
+                for (StructureType type : BIOMES[biome.ordinal()]) {
+                    if (STRUCTURES.get(type)) {
+                        Location structure;
+                        try {
+                            structure = location.getWorld().locateNearestStructure(location, type, 1, false);
+                        } catch (NullPointerException e) {
+                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "]," + location.getBlockX() + ", " + location.getBlockZ() + ") due to null pointer exception.");
+                            return;
                         }
-                        set.createMarker(id + "," + x + "," + z, label, world, x, 64, z, api.getMarkerIcon("structures." + id), true);
+                        if (structure != null) {
+                            String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
+                            int x = structure.getBlockX();
+                            int z = structure.getBlockZ();
+                            String label = "";
+                            if (!noLabels) {
+                                label = LABELS.get(type);
+                                if (includeCoordinates) {
+                                    label = label + " [" + x * 16 + "," + z * 16 + "]";
+                                }
+                            }
+                            set.createMarker(id + "," + x + "," + z, label, world.getName(), x, 64, z, api.getMarkerIcon("structures." + id), true);
+                        }
                     }
                 }
             }
