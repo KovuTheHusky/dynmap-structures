@@ -247,7 +247,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                             if (!noLabels) {
                                 label = LABELS.get(type);
                                 if (includeCoordinates) {
-                                    label = label + " [" + x * 16 + "," + z * 16 + "]";
+                                    label = label + " [" + x + "," + z + "]";
                                 }
                             }
                             set.createMarker(id + "," + x + "," + z, label, world.getName(), x, 64, z, api.getMarkerIcon("structures." + id), true);
