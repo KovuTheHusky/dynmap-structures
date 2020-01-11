@@ -2,7 +2,7 @@
 
 A Bukkit plugin that shows your world's structures (such as Villages, Strongholds, and Pyramids) on Dynmap.
 
-[![Dynmap-Structures](https://kovuthehusky.com/assets/dynmapstructures3.png)](https://kovuthehusky.com/examples/dynmap-structures)
+[![Dynmap-Structures](https://kovuthehusky.com/images/dynmapstructures2.png)](https://kovuthehusky.com/examples/dynmap-structures)
 
 ## Features
 
