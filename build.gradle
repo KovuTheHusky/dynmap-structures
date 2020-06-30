@@ -8,7 +8,7 @@ plugins {
 }
 
 group = 'com.kovuthehusky'
-version = '2.2.2-SNAPSHOT'
+version = '2.3.0'
 sourceCompatibility = '1.8'
 
 processResources {
