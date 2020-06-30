@@ -75,7 +75,17 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
         BIOMES[SWAMP.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, SWAMP_HUT};
         BIOMES[RIVER.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[NETHER_WASTES.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        try {
+            BIOMES[Biome.valueOf("NETHER").ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        } catch (IllegalArgumentException e) {
+            // This is expected behavior from 1.16 onward
+        }
+        try {
+            Biome.valueOf("NETHER_WASTES");
+            BIOMES[NETHER_WASTES.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("NETHER_WASTES not supported.");
+        }
         BIOMES[THE_END.ordinal()] = new StructureType[]{END_CITY};
         BIOMES[FROZEN_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[FROZEN_RIVER.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
@@ -140,12 +150,42 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[ERODED_BADLANDS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_WOODED_BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[BAMBOO_JUNGLE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
-        BIOMES[BAMBOO_JUNGLE_HILLS.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
-        BIOMES[SOUL_SAND_VALLEY.ordinal()] = new StructureType[]{NETHER_FORTRESS};
-        BIOMES[CRIMSON_FOREST.ordinal()] = new StructureType[]{NETHER_FORTRESS};
-        BIOMES[WARPED_FOREST.ordinal()] = new StructureType[]{NETHER_FORTRESS};
-        BIOMES[BASALT_DELTAS.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        try {
+            Biome.valueOf("BAMBOO_JUNGLE");
+            BIOMES[BAMBOO_JUNGLE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("BAMBOO_JUNGLE not supported.");
+        }
+        try {
+            Biome.valueOf("BAMBOO_JUNGLE_HILLS");
+            BIOMES[BAMBOO_JUNGLE_HILLS.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("BAMBOO_JUNGLE_HILLS not supported.");
+        }
+        try {
+            Biome.valueOf("SOUL_SAND_VALLEY");
+            BIOMES[SOUL_SAND_VALLEY.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("SOUL_SAND_VALLEY not supported.");
+        }
+        try {
+            Biome.valueOf("CRIMSON_FOREST");
+            BIOMES[CRIMSON_FOREST.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("CRIMSON_FOREST not supported.");
+        }
+        try {
+            Biome.valueOf("WARPED_FOREST");
+            BIOMES[WARPED_FOREST.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("WARPED_FOREST not supported.");
+        }
+        try {
+            Biome.valueOf("BASALT_DELTAS");
+            BIOMES[BASALT_DELTAS.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("BASALT_DELTAS not supported.");
+        }
         // Add pillager outposts if supported
         if (StructureType.getStructureTypes().containsKey("pillager_outpost")) {
             for (Biome biome : new Biome[]{PLAINS, DESERT, TAIGA, SNOWY_TUNDRA, SNOWY_MOUNTAINS, DESERT_HILLS, TAIGA_HILLS, SNOWY_TAIGA, SNOWY_TAIGA_HILLS, SAVANNA, SAVANNA_PLATEAU, SUNFLOWER_PLAINS, DESERT_LAKES, TAIGA_MOUNTAINS, ICE_SPIKES, SNOWY_TAIGA_MOUNTAINS, SHATTERED_SAVANNA, SHATTERED_SAVANNA_PLATEAU}) {
@@ -274,7 +314,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             Location location = new Location(chunk.getWorld(), chunk.getX() << 4, 64, chunk.getZ() << 4);
             World world = location.getWorld();
             if (world != null) {
-                Biome biome = world.getBiome(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                Biome biome;
+                try {
+                    Biome.class.getMethod("getBiome", int.class, int.class, int.class);
+                    biome = world.getBiome(location.getBlockX(), location.getBlockY(), location.getBlockZ());
+                } catch (NoSuchMethodException e) {
+                    biome = world.getBiome(location.getBlockX(), location.getBlockZ());
+                }
                 for (StructureType type : BIOMES[biome.ordinal()]) {
                     if (STRUCTURES.get(type)) {
                         Location structure;
