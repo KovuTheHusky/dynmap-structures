@@ -8,9 +8,9 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 
 * Adds markers to [Dynmap](https://dev.bukkit.org/projects/dynmap) where all structures are located.
 * Currently supports the following structures in the following dimensions:
-    * Overworld: [Abandoned Mineshaft](https://minecraft.gamepedia.com/Abandoned_mineshaft), [Buried Treasure](https://minecraft.gamepedia.com/Buried_treasure), [Desert Pyramid](https://minecraft.gamepedia.com/Desert_pyramid), [Igloo](https://minecraft.gamepedia.com/Igloo), [Jungle Pyramid](https://minecraft.gamepedia.com/Jungle_pyramid), [Ocean Monument](https://minecraft.gamepedia.com/Ocean_monument), [Pillager Outpost](https://minecraft.gamepedia.com/Pillager_outpost), [Shipwreck](https://minecraft.gamepedia.com/Shipwreck), [Stronghold](https://minecraft.gamepedia.com/Stronghold), [Underwater Ruins](https://minecraft.gamepedia.com/Underwater_ruins), [Village](https://minecraft.gamepedia.com/Village), [Witch Hut](https://minecraft.gamepedia.com/Witch_hut), [Woodland Mansion](https://minecraft.gamepedia.com/Woodland_mansion).
-    * Nether: [Nether Fortress](https://minecraft.gamepedia.com/Nether_fortress).
-    * End: [End City](https://minecraft.gamepedia.com/End_city).
+    * Overworld: [Buried Treasure](https://minecraft.gamepedia.com/Buried_Treasure), [Desert Pyramid](https://minecraft.gamepedia.com/Desert_pyramid), [Igloo](https://minecraft.gamepedia.com/Igloo), [Jungle Pyramid](https://minecraft.gamepedia.com/Jungle_pyramid), [Mineshaft](https://minecraft.gamepedia.com/Mineshaft), [Ocean Monument](https://minecraft.gamepedia.com/Ocean_Monument), [Ocean Ruins](https://minecraft.gamepedia.com/Ocean_Ruins), [Pillager Outpost](https://minecraft.gamepedia.com/Pillager_Outpost), [Ruined Portal](https://minecraft.gamepedia.com/Ruined_Portal), [Shipwreck](https://minecraft.gamepedia.com/Shipwreck), [Stronghold](https://minecraft.gamepedia.com/Stronghold), [Village](https://minecraft.gamepedia.com/Village), [Swamp Hut](https://minecraft.gamepedia.com/Swamp_hut), [Woodland Mansion](https://minecraft.gamepedia.com/Woodland_Mansion).
+    * Nether: [Bastion Remnant](https://minecraft.gamepedia.com/Bastion_Remnant), [Nether Fortress](https://minecraft.gamepedia.com/Nether_Fortress), [Nether Fossil](https://minecraft.gamepedia.com/Nether_Fossil), [Ruined Portal](https://minecraft.gamepedia.com/Ruined_Portal).
+    * End: [End City](https://minecraft.gamepedia.com/End_City).
 * Configure which types of structures you would like to be shown.
 * Localize or change the labels to anything you would like.
 * Compatible with [Spigot](https://www.spigotmc.org), [Paper](https://papermc.io) and any other Bukkit compatible server with [Dynmap](https://dev.bukkit.org/projects/dynmap) installed. Also compatible with any [Forge](https://www.minecraftforge.net) based Bukkit compatible server with [DynmapForge](https://minecraft.curseforge.com/projects/dynmapforge) and [DynmapCBBridge](https://minecraft.curseforge.com/projects/dynmapcbbridge) installed.
@@ -19,6 +19,10 @@ A Bukkit plugin that shows your world's structures (such as Villages, Stronghold
 ## Configuration
 
 The **structures** node supports boolean values for the following keys:
+
+**bastionremnant**
+
+    If true, displays Bastion Remnants on your map. Default value is true.
 
 **buriedtreasure**
 
@@ -50,19 +54,27 @@ The **structures** node supports boolean values for the following keys:
 
 **mineshaft**
 
-    If true, displays Abandoned Mineshafts on your map. Default value is false.
+    If true, displays Mineshafts on your map. Default value is false.
 
 **monument**
 
     If true, displays Ocean Monuments on your map. Default value is true.
 
+**netherfossil**
+
+    If true, displays Nether Fossils on your map. Default value is true.
+
 **oceanruin**
 
-    If true, displays Underwater Ruins on your map. Default value is true.
+    If true, displays Ocean Ruins on your map. Default value is true.
 
 **pillageroutpost**
 
     If true, displays Pillager Outposts on your map. Default value is true.
+
+**ruinedportal**
+
+    If true, displays Ruined Portals on your map. Default value is true.
 
 **shipwreck**
 
@@ -72,15 +84,19 @@ The **structures** node supports boolean values for the following keys:
 
     If true, displays Strongholds on your map. Default value is true.
 
-**witch**
+**swamphut**
 
-    If true, displays Witch Huts on your map. Default value is true.
+    If true, displays Swamp Huts on your map. Default value is true.
 
 **village**
 
     If true, displays Villages on your map. Default value is true.
 
 The **labels** node supports string values for the following keys:
+
+**bastionremnant**
+
+    If set, the label for Bastion Remnants on your map. Default value is Bastion Remnant.
 
 **buriedtreasure**
 
@@ -112,19 +128,27 @@ The **labels** node supports string values for the following keys:
 
 **mineshaft**
 
-    If set, the label for Abandoned Mineshafts on your map. Default value is Abandoned Mineshaft.
+    If set, the label for Mineshafts on your map. Default value is Mineshaft.
 
 **monument**
 
     If set, the label for Ocean Monuments on your map. Default value is Ocean Monument.
 
+**netherfossil**
+
+    If set, the label for Nether Fossils on your map. Default value is Nether Fossil.
+
 **oceanruin**
 
-    If set, the label for Underwater Ruins on your map. Default value is Underwater Ruins.
+    If set, the label for Ocean Ruins on your map. Default value is Ocean Ruins.
 
 **pillageroutpost**
 
     If set, the label for Pillager Outposts on your map. Default value is Pillager Outpost.
+
+**ruinedportal**
+
+    If set, the label for Ruined Portals on your map. Default value is Ruined Portal.
 
 **shipwreck**
 
@@ -134,9 +158,9 @@ The **labels** node supports string values for the following keys:
 
     If set, the label for Strongholds on your map. Default value is Stronghold.
 
-**witch**
+**swamphut**
 
-    If set, the label for Witch Huts on your map. Default value is Witch Hut.
+    If set, the label for Swamp Huts on your map. Default value is Swamp Hut.
 
 **village**
 

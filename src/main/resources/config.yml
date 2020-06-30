@@ -1,4 +1,5 @@
 structures:
+  bastionremnant: true
   buriedtreasure: false
   desertpyramid: true
   endcity: true
@@ -8,8 +9,10 @@ structures:
   mansion: true
   mineshaft: false
   monument: true
+  netherfossil: true
   oceanruin: false
   pillageroutpost: true
+  ruinedportal: true
   shipwreck: false
   stronghold: true
   swamphut: true

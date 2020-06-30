@@ -23,6 +23,9 @@ import static org.bukkit.block.Biome.*;
 public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private static final StructureType[][] BIOMES = new StructureType[Biome.values().length][];
     private static final Map<StructureType, String> LABELS = new HashMap<StructureType, String>() {{
+        if (StructureType.getStructureTypes().containsKey("bastion_remnant")) {
+            put(BASTION_REMNANT, "Bastion Remnant");
+        }
         put(BURIED_TREASURE, "Buried Treasure");
         put(DESERT_PYRAMID, "Desert Pyramid");
         put(END_CITY, "End City");
@@ -30,15 +33,21 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         put(IGLOO, "Igloo");
         put(JUNGLE_PYRAMID, "Jungle Pyramid");
         put(WOODLAND_MANSION, "Woodland Mansion");
-        put(MINESHAFT, "Abandoned Mineshaft");
+        put(MINESHAFT, "Mineshaft");
+        if (StructureType.getStructureTypes().containsKey("nether_fossil")) {
+            put(NETHER_FOSSIL, "Nether Fossil");
+        }
         put(OCEAN_MONUMENT, "Ocean Monument");
-        put(OCEAN_RUIN, "Underwater Ruins");
+        put(OCEAN_RUIN, "Ocean Ruins");
         if (StructureType.getStructureTypes().containsKey("pillager_outpost")) {
             put(PILLAGER_OUTPOST, "Pillager Outpost");
         }
+        if (StructureType.getStructureTypes().containsKey("ruined_portal")) {
+            put(RUINED_PORTAL, "Ruined Portal");
+        }
         put(SHIPWRECK, "Shipwreck");
         put(STRONGHOLD, "Stronghold");
-        put(SWAMP_HUT, "Witch Hut");
+        put(SWAMP_HUT, "Swamp Hut");
         put(VILLAGE, "Village");
     }};
     private static final Map<StructureType, Boolean> STRUCTURES = new HashMap<>();
@@ -51,7 +60,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     @Override
     public void onEnable() {
         // Set up the metrics
-        new Metrics(this);
+        new Metrics(this, 605);
         // Set up the configuration
         this.saveDefaultConfig();
         FileConfiguration configuration = this.getConfig();
@@ -66,7 +75,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
         BIOMES[SWAMP.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, SWAMP_HUT};
         BIOMES[RIVER.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[NETHER.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        BIOMES[NETHER_WASTES.ordinal()] = new StructureType[]{NETHER_FORTRESS};
         BIOMES[THE_END.ordinal()] = new StructureType[]{END_CITY};
         BIOMES[FROZEN_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[FROZEN_RIVER.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
@@ -131,12 +140,48 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[ERODED_BADLANDS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_WOODED_BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
         BIOMES[MODIFIED_BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        BIOMES[BAMBOO_JUNGLE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        BIOMES[BAMBOO_JUNGLE_HILLS.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        BIOMES[SOUL_SAND_VALLEY.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        BIOMES[CRIMSON_FOREST.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        BIOMES[WARPED_FOREST.ordinal()] = new StructureType[]{NETHER_FORTRESS};
+        BIOMES[BASALT_DELTAS.ordinal()] = new StructureType[]{NETHER_FORTRESS};
         // Add pillager outposts if supported
         if (StructureType.getStructureTypes().containsKey("pillager_outpost")) {
             for (Biome biome : new Biome[]{PLAINS, DESERT, TAIGA, SNOWY_TUNDRA, SNOWY_MOUNTAINS, DESERT_HILLS, TAIGA_HILLS, SNOWY_TAIGA, SNOWY_TAIGA_HILLS, SAVANNA, SAVANNA_PLATEAU, SUNFLOWER_PLAINS, DESERT_LAKES, TAIGA_MOUNTAINS, ICE_SPIKES, SNOWY_TAIGA_MOUNTAINS, SHATTERED_SAVANNA, SHATTERED_SAVANNA_PLATEAU}) {
                 StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
                 System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
                 temp[temp.length - 1] = PILLAGER_OUTPOST;
+                BIOMES[biome.ordinal()] = temp;
+            }
+        }
+        // Add bastion remnant if supported
+        if (StructureType.getStructureTypes().containsKey("bastion_remnant")) {
+            for (Biome biome : new Biome[]{NETHER_WASTES, SOUL_SAND_VALLEY, CRIMSON_FOREST, WARPED_FOREST}) {
+                StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
+                System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
+                temp[temp.length - 1] = BASTION_REMNANT;
+                BIOMES[biome.ordinal()] = temp;
+            }
+        }
+        // Add nether fossils if supported
+        if (StructureType.getStructureTypes().containsKey("nether_fossil")) {
+            for (Biome biome : new Biome[]{SOUL_SAND_VALLEY}) {
+                StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
+                System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
+                temp[temp.length - 1] = NETHER_FOSSIL;
+                BIOMES[biome.ordinal()] = temp;
+            }
+        }
+        // Add ruined portals if supported
+        if (StructureType.getStructureTypes().containsKey("ruined_portal")) {
+            for (Biome biome : Biome.values()) {
+                if (biome == THE_END) {
+                    continue;
+                }
+                StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
+                System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
+                temp[temp.length - 1] = RUINED_PORTAL;
                 BIOMES[biome.ordinal()] = temp;
             }
         }
@@ -218,7 +263,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     }
 
     private class DynmapStructuresRunnable implements Runnable {
-        private Chunk chunk;
+        private final Chunk chunk;
 
         private DynmapStructuresRunnable(Chunk chunk) {
             this.chunk = chunk;
@@ -229,12 +274,15 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             Location location = new Location(chunk.getWorld(), chunk.getX() << 4, 64, chunk.getZ() << 4);
             World world = location.getWorld();
             if (world != null) {
-                Biome biome = world.getBiome(location.getBlockX(), location.getBlockZ());
+                Biome biome = world.getBiome(location.getBlockX(), location.getBlockY(), location.getBlockZ());
                 for (StructureType type : BIOMES[biome.ordinal()]) {
                     if (STRUCTURES.get(type)) {
                         Location structure;
                         try {
                             structure = location.getWorld().locateNearestStructure(location, type, 1, false);
+                        } catch (ConcurrentModificationException e) {
+                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "]," + location.getBlockX() + ", " + location.getBlockZ() + ") due to concurrent modification exception.");
+                            return;
                         } catch (NullPointerException e) {
                             getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "]," + location.getBlockX() + ", " + location.getBlockZ() + ") due to null pointer exception.");
                             return;
