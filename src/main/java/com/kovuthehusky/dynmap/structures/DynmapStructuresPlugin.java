@@ -281,10 +281,10 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                         try {
                             structure = location.getWorld().locateNearestStructure(location, type, 1, false);
                         } catch (ConcurrentModificationException e) {
-                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "]," + location.getBlockX() + ", " + location.getBlockZ() + ") due to concurrent modification exception.");
+                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "], " + location.getBlockX() + ", " + location.getBlockZ() + ") due to concurrent modification exception.");
                             return;
                         } catch (NullPointerException e) {
-                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "]," + location.getBlockX() + ", " + location.getBlockZ() + ") due to null pointer exception.");
+                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "], " + location.getBlockX() + ", " + location.getBlockZ() + ") due to null pointer exception.");
                             return;
                         }
                         if (structure != null) {
