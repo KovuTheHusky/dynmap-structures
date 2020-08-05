@@ -196,7 +196,6 @@ You can also place a hash in front of any of the nodes to comment it out and dis
 
 ## Links
 
-* Website: <https://kovuthehusky.com/projects#dynmapstructures>
 * Example: <https://d.kovuthehusky.com/dynmap-structures>
 * Issues: <https://github.com/KovuTheHusky/dynmap-structures/issues>
 * Source: <https://github.com/KovuTheHusky/dynmap-structures>
