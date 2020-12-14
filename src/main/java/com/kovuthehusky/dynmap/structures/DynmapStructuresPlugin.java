@@ -319,8 +319,13 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     Biome.class.getMethod("getBiome", int.class, int.class, int.class);
                     biome = world.getBiome(location.getBlockX(), location.getBlockY(), location.getBlockZ());
                 } catch (NoSuchMethodException e) {
-                    biome = world.getBiome(location.getBlockX(), location.getBlockZ());
+					try {
+						biome = world.getBiome(location.getBlockX(), location.getBlockZ());
+					} catch (NullPointerException e2) {
+						return;
+					}
                 }
+				if (biome == null) return;
                 for (StructureType type : BIOMES[biome.ordinal()]) {
                     if (STRUCTURES.get(type)) {
                         Location structure;
