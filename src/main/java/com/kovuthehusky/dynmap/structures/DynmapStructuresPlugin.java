@@ -319,37 +319,34 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     Biome.class.getMethod("getBiome", int.class, int.class, int.class);
                     biome = world.getBiome(location.getBlockX(), location.getBlockY(), location.getBlockZ());
                 } catch (NoSuchMethodException e) {
-					try {
-						biome = world.getBiome(location.getBlockX(), location.getBlockZ());
-					} catch (NullPointerException e2) {
-						return;
-					}
+                    biome = world.getBiome(location.getBlockX(), location.getBlockZ());
                 }
-				if (biome == null) return;
-                for (StructureType type : BIOMES[biome.ordinal()]) {
-                    if (STRUCTURES.get(type)) {
-                        Location structure;
-                        try {
-                            structure = location.getWorld().locateNearestStructure(location, type, 1, false);
-                        } catch (ConcurrentModificationException e) {
-                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "], " + location.getBlockX() + ", " + location.getBlockZ() + ") due to concurrent modification exception.");
-                            return;
-                        } catch (NullPointerException e) {
-                            getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "], " + location.getBlockX() + ", " + location.getBlockZ() + ") due to null pointer exception.");
-                            return;
-                        }
-                        if (structure != null) {
-                            String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
-                            int x = structure.getBlockX();
-                            int z = structure.getBlockZ();
-                            String label = "";
-                            if (!noLabels) {
-                                label = LABELS.get(type);
-                                if (includeCoordinates) {
-                                    label = label + " [" + x + "," + z + "]";
-                                }
+				if (biome != null) {
+                    for (StructureType type : BIOMES[biome.ordinal()]) {
+                        if (STRUCTURES.get(type)) {
+                            Location structure;
+                            try {
+                                structure = location.getWorld().locateNearestStructure(location, type, 1, false);
+                            } catch (ConcurrentModificationException e) {
+                                getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "], " + location.getBlockX() + ", " + location.getBlockZ() + ") due to concurrent modification exception.");
+                                return;
+                            } catch (NullPointerException e) {
+                                getLogger().warning("Skipping locate at ([" + location.getWorld().getName() + "], " + location.getBlockX() + ", " + location.getBlockZ() + ") due to null pointer exception.");
+                                return;
                             }
-                            set.createMarker(id + "," + x + "," + z, label, world.getName(), x, 64, z, api.getMarkerIcon("structures." + id), true);
+                            if (structure != null) {
+                                String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
+                                int x = structure.getBlockX();
+                                int z = structure.getBlockZ();
+                                String label = "";
+                                if (!noLabels) {
+                                    label = LABELS.get(type);
+                                    if (includeCoordinates) {
+                                        label = label + " [" + x + "," + z + "]";
+                                    }
+                                }
+                                set.createMarker(id + "," + x + "," + z, label, world.getName(), x, 64, z, api.getMarkerIcon("structures." + id), true);
+                            }
                         }
                     }
                 }
