@@ -27,16 +27,15 @@ dependencies {
 
 repositories {
   mavenCentral()
-  maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-  maven { url 'https://repo.codemc.org/repository/maven-public/' }
+  maven { url 'https://hub.spigotmc.org/nexus/content/groups/public/' }
   maven { url 'http://repo.mikeprimm.com/' }
 }
 
 shadowJar {
   dependencies {
-    include(dependency('org.bstats:bstats-bukkit'))
+    include(dependency('org.bstats::'))
   }
-  relocate 'org.bstats', 'com.kovuthehusky'
+  relocate 'org.bstats', 'com.kovuthehusky.bstats'
 }
 
 jar.finalizedBy(shadowJar);
