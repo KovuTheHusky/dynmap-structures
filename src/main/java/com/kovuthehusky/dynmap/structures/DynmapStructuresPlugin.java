@@ -298,10 +298,7 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
         if (event.getWorld().canGenerateStructures()) {
-            Bukkit.getScheduler().runTask(
-                this,
-                new DynmapStructuresRunnable(event.getChunk())
-            );
+            Bukkit.getScheduler().runTask(this, new DynmapStructuresRunnable(event.getChunk()));
         }
     }
 
