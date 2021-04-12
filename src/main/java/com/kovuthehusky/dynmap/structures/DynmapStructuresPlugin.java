@@ -186,6 +186,12 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         } catch (IllegalArgumentException e) {
             getLogger().warning("BASALT_DELTAS not supported.");
         }
+        try {
+            Biome.valueOf("CUSTOM");
+            BIOMES[CUSTOM.ordinal()] = new StructureType[]{BASTION_REMNANT, BURIED_TREASURE, DESERT_PYRAMID, END_CITY, NETHER_FORTRESS, IGLOO, JUNGLE_PYRAMID, WOODLAND_MANSION, MINESHAFT, NETHER_FOSSIL, OCEAN_MONUMENT, OCEAN_RUIN, PILLAGER_OUTPOST, RUINED_PORTAL, SHIPWRECK, STRONGHOLD, SWAMP_HUT, VILLAGE};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("CUSTOM not supported.");
+        }
         // Add pillager outposts if supported
         if (StructureType.getStructureTypes().containsKey("pillager_outpost")) {
             for (Biome biome : new Biome[]{PLAINS, DESERT, TAIGA, SNOWY_TUNDRA, SNOWY_MOUNTAINS, DESERT_HILLS, TAIGA_HILLS, SNOWY_TAIGA, SNOWY_TAIGA_HILLS, SAVANNA, SAVANNA_PLATEAU, SUNFLOWER_PLAINS, DESERT_LAKES, TAIGA_MOUNTAINS, ICE_SPIKES, SNOWY_TAIGA_MOUNTAINS, SHATTERED_SAVANNA, SHATTERED_SAVANNA_PLATEAU}) {
