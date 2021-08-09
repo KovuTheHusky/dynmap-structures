@@ -187,6 +187,18 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             getLogger().warning("BASALT_DELTAS not supported.");
         }
         try {
+            Biome.valueOf("DRIPSTONE_CAVES");
+            BIOMES[DRIPSTONE_CAVES.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("DRIPSTONE_CAVES not supported.");
+        }
+        try {
+            Biome.valueOf("LUSH_CAVES");
+            BIOMES[LUSH_CAVES.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("LUSH_CAVES not supported.");
+        }
+        try {
             Biome.valueOf("CUSTOM");
             BIOMES[CUSTOM.ordinal()] = new StructureType[]{BASTION_REMNANT, BURIED_TREASURE, DESERT_PYRAMID, END_CITY, NETHER_FORTRESS, IGLOO, JUNGLE_PYRAMID, WOODLAND_MANSION, MINESHAFT, NETHER_FOSSIL, OCEAN_MONUMENT, OCEAN_RUIN, PILLAGER_OUTPOST, RUINED_PORTAL, SHIPWRECK, STRONGHOLD, SWAMP_HUT, VILLAGE};
         } catch (IllegalArgumentException e) {
