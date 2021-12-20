@@ -70,7 +70,16 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[PLAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
         BIOMES[DESERT.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("MOUNTAINS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("WINDSWEPT_HILLS");
+            BIOMES[WINDSWEPT_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("WINDSWEPT_HILLS not supported.");
+        }
         BIOMES[FOREST.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
         BIOMES[TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
         BIOMES[SWAMP.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, SWAMP_HUT};
@@ -78,7 +87,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         try {
             BIOMES[Biome.valueOf("NETHER").ordinal()] = new StructureType[]{NETHER_FORTRESS};
         } catch (IllegalArgumentException e) {
-            // This is expected behavior from 1.16 onward
         }
         try {
             Biome.valueOf("NETHER_WASTES");
@@ -89,34 +97,121 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[THE_END.ordinal()] = new StructureType[]{END_CITY};
         BIOMES[FROZEN_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[FROZEN_RIVER.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[SNOWY_TUNDRA.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SNOWY_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        try {
+            BIOMES[Biome.valueOf("SNOWY_TUNDRA").ordinal()] = new StructureType[]{IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("SNOWY_PLAINS");
+            BIOMES[SNOWY_PLAINS.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("SNOWY_PLAINS not supported.");
+        }
+        try {
+            BIOMES[Biome.valueOf("SNOWY_MOUNTAINS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[MUSHROOM_FIELDS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[MUSHROOM_FIELD_SHORE.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("MUSHROOM_FIELD_SHORE").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[BEACH.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
-        BIOMES[DESERT_HILLS.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[WOODED_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[MOUNTAIN_EDGE.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("DESERT_HILLS").ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("WOODED_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("TAIGA_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("MOUNTAIN_EDGE").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[JUNGLE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
-        BIOMES[JUNGLE_HILLS.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
-        BIOMES[JUNGLE_EDGE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("JUNGLE_HILLS").ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("JUNGLE_EDGE").ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("SPARSE_JUNGLE");
+            BIOMES[SPARSE_JUNGLE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("SPARSE_JUNGLE not supported.");
+        }
         BIOMES[DEEP_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
-        BIOMES[STONE_SHORE.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("STONE_SHORE").ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("STONY_SHORE");
+            BIOMES[STONY_SHORE.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("STONY_SHORE not supported.");
+        }
         BIOMES[SNOWY_BEACH.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[BIRCH_FOREST.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[BIRCH_FOREST_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("BIRCH_FOREST_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[DARK_FOREST.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, WOODLAND_MANSION};
         BIOMES[SNOWY_TAIGA.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SNOWY_TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[GIANT_TREE_TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[GIANT_TREE_TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[WOODED_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("SNOWY_TAIGA_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("GIANT_TREE_TAIGA").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("OLD_GROWTH_PINE_TAIGA");
+            BIOMES[OLD_GROWTH_PINE_TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("OLD_GROWTH_PINE_TAIGA not supported.");
+        }
+        try {
+            BIOMES[Biome.valueOf("GIANT_TREE_TAIGA_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("WOODED_MOUNTAINS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("WINDSWEPT_FOREST");
+            BIOMES[WINDSWEPT_FOREST.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("WINDSWEPT_FOREST not supported.");
+        }
         BIOMES[SAVANNA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
         BIOMES[SAVANNA_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
         BIOMES[BADLANDS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[WOODED_BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("WOODED_BADLANDS_PLATEAU").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("WOODED_BADLANDS");
+            BIOMES[WOODED_BADLANDS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("WOODED_BADLANDS not supported.");
+        }
+        try {
+            BIOMES[Biome.valueOf("BADLANDS_PLATEAU").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[SMALL_END_ISLANDS.ordinal()] = new StructureType[]{END_CITY};
         BIOMES[END_MIDLANDS.ordinal()] = new StructureType[]{END_CITY};
         BIOMES[END_HIGHLANDS.ordinal()] = new StructureType[]{END_CITY};
@@ -124,32 +219,110 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         BIOMES[WARM_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[LUKEWARM_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[COLD_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
-        BIOMES[DEEP_WARM_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("DEEP_WARM_OCEAN").ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[DEEP_LUKEWARM_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[DEEP_COLD_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[DEEP_FROZEN_OCEAN.ordinal()] = new StructureType[]{BURIED_TREASURE, MINESHAFT, OCEAN_MONUMENT, OCEAN_RUIN, SHIPWRECK, STRONGHOLD};
         BIOMES[THE_VOID.ordinal()] = new StructureType[]{};
         BIOMES[SUNFLOWER_PLAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[DESERT_LAKES.ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[GRAVELLY_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("DESERT_LAKES").ordinal()] = new StructureType[]{DESERT_PYRAMID, MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("GRAVELLY_MOUNTAINS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("WINDSWEPT_GRAVELLY_HILLS");
+            BIOMES[WINDSWEPT_GRAVELLY_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("WINDSWEPT_GRAVELLY_HILLS not supported.");
+        }
         BIOMES[FLOWER_FOREST.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[TAIGA_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SWAMP_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, SWAMP_HUT};
+        try {
+            BIOMES[Biome.valueOf("TAIGA_MOUNTAINS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("SWAMP_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, SWAMP_HUT};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[ICE_SPIKES.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[MODIFIED_JUNGLE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
-        BIOMES[MODIFIED_JUNGLE_EDGE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
-        BIOMES[TALL_BIRCH_FOREST.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[TALL_BIRCH_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[DARK_FOREST_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, WOODLAND_MANSION};
-        BIOMES[SNOWY_TAIGA_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[GIANT_SPRUCE_TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[GIANT_SPRUCE_TAIGA_HILLS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[MODIFIED_GRAVELLY_MOUNTAINS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[SHATTERED_SAVANNA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
-        BIOMES[SHATTERED_SAVANNA_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        try {
+            BIOMES[Biome.valueOf("MODIFIED_JUNGLE").ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("MODIFIED_JUNGLE_EDGE").ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("TALL_BIRCH_FOREST").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("OLD_GROWTH_BIRCH_FOREST");
+            BIOMES[OLD_GROWTH_BIRCH_FOREST.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("OLD_GROWTH_BIRCH_FOREST not supported.");
+        }
+        try {
+            BIOMES[Biome.valueOf("TALL_BIRCH_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("DARK_FOREST_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, WOODLAND_MANSION};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("SNOWY_TAIGA_MOUNTAINS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("GIANT_SPRUCE_TAIGA").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("OLD_GROWTH_SPRUCE_TAIGA");
+            BIOMES[OLD_GROWTH_SPRUCE_TAIGA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("OLD_GROWTH_SPRUCE_TAIGA not supported.");
+        }
+        try {
+            BIOMES[Biome.valueOf("GIANT_SPRUCE_TAIGA_HILLS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("MODIFIED_GRAVELLY_MOUNTAINS").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("SHATTERED_SAVANNA").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            Biome.valueOf("WINDSWEPT_SAVANNA");
+            BIOMES[WINDSWEPT_SAVANNA.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("WINDSWEPT_SAVANNA not supported.");
+        }
+        try {
+            BIOMES[Biome.valueOf("SHATTERED_SAVANNA_PLATEAU").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+        }
         BIOMES[ERODED_BADLANDS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[MODIFIED_WOODED_BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
-        BIOMES[MODIFIED_BADLANDS_PLATEAU.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        try {
+            BIOMES[Biome.valueOf("MODIFIED_WOODED_BADLANDS_PLATEAU").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
+        try {
+            BIOMES[Biome.valueOf("MODIFIED_BADLANDS_PLATEAU").ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+        }
         try {
             Biome.valueOf("BAMBOO_JUNGLE");
             BIOMES[BAMBOO_JUNGLE.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
@@ -157,10 +330,8 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             getLogger().warning("BAMBOO_JUNGLE not supported.");
         }
         try {
-            Biome.valueOf("BAMBOO_JUNGLE_HILLS");
-            BIOMES[BAMBOO_JUNGLE_HILLS.ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
+            BIOMES[Biome.valueOf("BAMBOO_JUNGLE_HILLS").ordinal()] = new StructureType[]{JUNGLE_PYRAMID, MINESHAFT, STRONGHOLD};
         } catch (IllegalArgumentException e) {
-            getLogger().warning("BAMBOO_JUNGLE_HILLS not supported.");
         }
         try {
             Biome.valueOf("SOUL_SAND_VALLEY");
@@ -198,6 +369,43 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         } catch (IllegalArgumentException e) {
             getLogger().warning("LUSH_CAVES not supported.");
         }
+        /////
+        try {
+            Biome.valueOf("MEADOW");
+            BIOMES[MEADOW.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("MEADOW not supported.");
+        }
+        try {
+            Biome.valueOf("GROVE");
+            BIOMES[GROVE.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("GROVE not supported.");
+        }
+        try {
+            Biome.valueOf("SNOWY_SLOPES");
+            BIOMES[SNOWY_SLOPES.ordinal()] = new StructureType[]{IGLOO, MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("SNOWY_SLOPES not supported.");
+        }
+        try {
+            Biome.valueOf("FROZEN_PEAKS");
+            BIOMES[FROZEN_PEAKS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("FROZEN_PEAKS not supported.");
+        }
+        try {
+            Biome.valueOf("JAGGED_PEAKS");
+            BIOMES[JAGGED_PEAKS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("JAGGED_PEAKS not supported.");
+        }
+        try {
+            Biome.valueOf("STONY_PEAKS");
+            BIOMES[STONY_PEAKS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("STONY_PEAKS not supported.");
+        }
         try {
             Biome.valueOf("CUSTOM");
             BIOMES[CUSTOM.ordinal()] = new StructureType[]{BASTION_REMNANT, BURIED_TREASURE, DESERT_PYRAMID, END_CITY, NETHER_FORTRESS, IGLOO, JUNGLE_PYRAMID, WOODLAND_MANSION, MINESHAFT, NETHER_FOSSIL, OCEAN_MONUMENT, OCEAN_RUIN, PILLAGER_OUTPOST, RUINED_PORTAL, SHIPWRECK, STRONGHOLD, SWAMP_HUT, VILLAGE};
@@ -206,7 +414,97 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         }
         // Add pillager outposts if supported
         if (StructureType.getStructureTypes().containsKey("pillager_outpost")) {
-            for (Biome biome : new Biome[]{PLAINS, DESERT, TAIGA, SNOWY_TUNDRA, SNOWY_MOUNTAINS, DESERT_HILLS, TAIGA_HILLS, SNOWY_TAIGA, SNOWY_TAIGA_HILLS, SAVANNA, SAVANNA_PLATEAU, SUNFLOWER_PLAINS, DESERT_LAKES, TAIGA_MOUNTAINS, ICE_SPIKES, SNOWY_TAIGA_MOUNTAINS, SHATTERED_SAVANNA, SHATTERED_SAVANNA_PLATEAU}) {
+            ArrayList<Biome> biomes = new ArrayList<Biome>() {{
+                add(PLAINS);
+                add(DESERT);
+                add(TAIGA);
+                try {
+                    add(Biome.valueOf(("SNOWY_TUNDRA")));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("SNOWY_PLAINS");
+                    add(SNOWY_PLAINS);
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    add(Biome.valueOf(("SNOWY_MOUNTAINS")));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    add(Biome.valueOf(("DESERT_HILLS")));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    add(Biome.valueOf(("TAIGA_HILLS")));
+                } catch (IllegalArgumentException e) {
+                }
+                add(SNOWY_TAIGA);
+                try {
+                    add(Biome.valueOf(("SNOWY_TAIGA_HILLS")));
+                } catch (IllegalArgumentException e) {
+                }
+                add(SAVANNA);
+                add(SAVANNA_PLATEAU);
+                add(SUNFLOWER_PLAINS);
+                try {
+                    add(Biome.valueOf(("DESERT_LAKES")));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    add(Biome.valueOf(("TAIGA_MOUNTAINS")));
+                } catch (IllegalArgumentException e) {
+                }
+                add(ICE_SPIKES);
+                try {
+                    add(Biome.valueOf(("SNOWY_TAIGA_MOUNTAINS")));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    add(Biome.valueOf(("SHATTERED_SAVANNA")));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("WINDSWEPT_SAVANNA");
+                    add(WINDSWEPT_SAVANNA);
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    add(Biome.valueOf(("SHATTERED_SAVANNA_PLATEAU")));
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("MEADOW");
+                    add(MEADOW);
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("GROVE");
+                    add(GROVE);
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("SNOWY_SLOPES");
+                    add(SNOWY_SLOPES);
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("FROZEN_PEAKS");
+                    add(FROZEN_PEAKS);
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("JAGGED_PEAKS");
+                    add(JAGGED_PEAKS);
+                } catch (IllegalArgumentException e) {
+                }
+                try {
+                    Biome.valueOf("STONY_PEAKS");
+                    add(STONY_PEAKS);
+                } catch (IllegalArgumentException e) {
+                }
+            }};
+            for (Biome biome : biomes) {
                 StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
                 System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
                 temp[temp.length - 1] = PILLAGER_OUTPOST;
