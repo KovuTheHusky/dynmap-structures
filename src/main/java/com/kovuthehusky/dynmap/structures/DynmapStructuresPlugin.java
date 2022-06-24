@@ -23,6 +23,9 @@ import static org.bukkit.block.Biome.*;
 public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
     private static final StructureType[][] BIOMES = new StructureType[Biome.values().length][];
     private static final Map<StructureType, String> LABELS = new HashMap<StructureType, String>() {{
+//        if (StructureType.getStructureTypes().containsKey("ancient_city")) {
+//            put(ANCIENT_CITY, "Ancient City");
+//        }
         if (StructureType.getStructureTypes().containsKey("bastion_remnant")) {
             put(BASTION_REMNANT, "Bastion Remnant");
         }
@@ -369,7 +372,6 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
         } catch (IllegalArgumentException e) {
             getLogger().warning("LUSH_CAVES not supported.");
         }
-        /////
         try {
             Biome.valueOf("MEADOW");
             BIOMES[MEADOW.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, VILLAGE};
@@ -405,6 +407,18 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             BIOMES[STONY_PEAKS.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
         } catch (IllegalArgumentException e) {
             getLogger().warning("STONY_PEAKS not supported.");
+        }
+        try {
+            Biome.valueOf("DEEP_DARK");
+            BIOMES[DEEP_DARK.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("DEEP_DARK not supported.");
+        }
+        try {
+            Biome.valueOf("MANGROVE_SWAMP");
+            BIOMES[MANGROVE_SWAMP.ordinal()] = new StructureType[]{MINESHAFT, STRONGHOLD, SWAMP_HUT};
+        } catch (IllegalArgumentException e) {
+            getLogger().warning("MANGROVE_SWAMP not supported.");
         }
         try {
             Biome.valueOf("CUSTOM");
@@ -541,6 +555,21 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                 BIOMES[biome.ordinal()] = temp;
             }
         }
+        // Add ancient cities if supported
+//        if (StructureType.getStructureTypes().containsKey("ancient_city")) {
+//            ArrayList<Biome> biomes = new ArrayList<Biome>() {{
+//                try {
+//                    add(Biome.valueOf(("DEEP_DARK")));
+//                } catch (IllegalArgumentException e) {
+//                }
+//            }};
+//            for (Biome biome : biomes) {
+//                StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
+//                System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
+//                temp[temp.length - 1] = ANCIENT_CITY;
+//                BIOMES[biome.ordinal()] = temp;
+//            }
+//        }
         // Fill in id and label data structures
         for (StructureType type : StructureType.getStructureTypes().values()) {
             String id = type.getName().toLowerCase(Locale.ROOT).replace("_", "");
