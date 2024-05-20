@@ -526,35 +526,14 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
             }
         }
         // Add bastion remnant if supported
-        if (StructureType.getStructureTypes().containsKey("bastion_remnant")) {
-            for (Biome biome : new Biome[]{NETHER_WASTES, SOUL_SAND_VALLEY, CRIMSON_FOREST, WARPED_FOREST}) {
-                StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
-                System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
-                temp[temp.length - 1] = BASTION_REMNANT;
-                BIOMES[biome.ordinal()] = temp;
-            }
-        }
+        registerStructure("bastion_remnant", BASTION_REMNANT, new Biome[]{NETHER_WASTES, SOUL_SAND_VALLEY, CRIMSON_FOREST, WARPED_FOREST});
+
         // Add nether fossils if supported
-        if (StructureType.getStructureTypes().containsKey("nether_fossil")) {
-            for (Biome biome : new Biome[]{SOUL_SAND_VALLEY}) {
-                StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
-                System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
-                temp[temp.length - 1] = NETHER_FOSSIL;
-                BIOMES[biome.ordinal()] = temp;
-            }
-        }
+        registerStructure("nether_fossil", NETHER_FOSSIL, new Biome[]{SOUL_SAND_VALLEY});
+
         // Add ruined portals if supported
-        if (StructureType.getStructureTypes().containsKey("ruined_portal")) {
-            for (Biome biome : Biome.values()) {
-                if (biome == THE_END) {
-                    continue;
-                }
-                StructureType[] temp = new StructureType[BIOMES[biome.ordinal()].length + 1];
-                System.arraycopy(BIOMES[biome.ordinal()], 0, temp, 0, BIOMES[biome.ordinal()].length);
-                temp[temp.length - 1] = RUINED_PORTAL;
-                BIOMES[biome.ordinal()] = temp;
-            }
-        }
+        registerStructure("ruined_portal", RUINED_PORTAL, Biome.values());
+
         // Add ancient cities if supported
 //        if (StructureType.getStructureTypes().containsKey("ancient_city")) {
 //            ArrayList<Biome> biomes = new ArrayList<Biome>() {{
@@ -637,6 +616,23 @@ public class DynmapStructuresPlugin extends JavaPlugin implements Listener {
                     }
                 }
             }
+        }
+    }
+
+    private void registerStructure(String structureKey, StructureType structureType, Biome[] biomes) {
+        if (StructureType.getStructureTypes().containsKey(structureKey)) {
+            for (Biome biome : biomes) {
+                StructureType[] oldStructures = BIOMES[biome.ordinal()];
+                if (oldStructures == null) {
+                    BIOMES[biome.ordinal()] = new StructureType[]{structureType};
+                } else {
+                    StructureType[] newStructures = new StructureType[oldStructures.length + 1];
+                    System.arraycopy(oldStructures, 0, newStructures, 0, oldStructures.length);
+                    newStructures[newStructures.length - 1] = structureType;
+                    BIOMES[biome.ordinal()] = newStructures;
+                }
+            }
+
         }
     }
 
